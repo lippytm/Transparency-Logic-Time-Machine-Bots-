@@ -41,7 +41,7 @@ This document describes the network of connected repositories and how they inter
 
 ### 3. ⚙️ Time-Machines-Builders-
 - **URL:** https://github.com/lippytm/Time-Machines-Builders-
-- **Purpose:** AI automation in Earn while you Learn to Become a Better Programmer and Blockchain Developer
+- **Purpose:** AI automation - Earn while you Learn to Become a Better Programmer and Blockchain Developer
 - **Language:** Not specified
 - **Stars:** 1
 - **Default Branch:** main
@@ -115,25 +115,26 @@ To enable actual cross-repository dispatch capabilities:
 
 3. **Enable Repository Dispatch:**
    - Edit `.github/workflows/cross-repo-sync.yml`
-   - Uncomment lines 37-43 (the Repository Dispatch step)
+   - Locate and uncomment the "Repository Dispatch" step
    - Commit and push the changes
 
 4. **Set Up Receiving Repositories:**
    Each connected repository should add a workflow to receive events:
    ```yaml
-   name: Handle Remote Trigger
-   on:
-     repository_dispatch:
-       types: [transparency-bots-update]
-   
-   jobs:
-     handle-update:
-       runs-on: ubuntu-latest
-       steps:
-         - name: Log update
-           run: |
-             echo "Triggered by: ${{ github.event.client_payload.ref }}"
-             echo "From commit: ${{ github.event.client_payload.sha }}"
+name: Handle Remote Trigger
+
+on:
+  repository_dispatch:
+    types: [transparency-bots-update]
+
+jobs:
+  handle-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log update
+        run: |
+          echo "Triggered by: ${{ github.event.client_payload.ref }}"
+          echo "From commit: ${{ github.event.client_payload.sha }}"
    ```
 
 ## Manual Workflow Execution
