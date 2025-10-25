@@ -1,0 +1,73 @@
+# Workflow for synchronizing and notifying connected repositories
+
+name: Cross-Repository Sync
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+    inputs:
+      notify_all:
+        description: 'Notify all connected repositories'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  notify-connected-repos:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.notify_all == 'true'
+    strategy:
+      matrix:
+        repo: 
+          - 'Web3AI'
+          - 'gatsby-starter-blog'
+          - 'Time-Machines-Builders-'
+          - 'AI-Time-Machines'
+    
+    steps:
+      - name: Notify repository
+        run: |
+          echo "Would notify repository: lippytm/${{ matrix.repo }}"
+          echo "Event type: update from Transparency-Logic-Time-Machine-Bots-"
+          echo "Note: To enable actual notifications, add a PAT token with repo_dispatch permissions"
+          echo "and uncomment the repository_dispatch action below"
+      
+      # Uncomment and configure the following step with a PAT token to enable actual cross-repo triggers
+      # - name: Repository Dispatch
+      #   uses: peter-evans/repository-dispatch@v2
+      #   with:
+      #     token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      #     repository: lippytm/${{ matrix.repo }}
+      #     event-type: transparency-bots-update
+      #     client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+
+  display-repo-connections:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display Connected Repository Network
+        run: |
+          echo "╔═══════════════════════════════════════════════════════╗"
+          echo "║  Transparency Logic Time Machine Bots Network         ║"
+          echo "╚═══════════════════════════════════════════════════════╝"
+          echo ""
+          echo "🔗 Connected Repositories:"
+          echo ""
+          echo "  1. 🌐 Web3AI"
+          echo "     https://github.com/lippytm/Web3AI"
+          echo "     Purpose: Web3 and AI integration"
+          echo ""
+          echo "  2. 📝 gatsby-starter-blog"
+          echo "     https://github.com/lippytm/gatsby-starter-blog"
+          echo "     Purpose: Blog platform with Gatsby"
+          echo ""
+          echo "  3. ⚙️  Time-Machines-Builders-"
+          echo "     https://github.com/lippytm/Time-Machines-Builders-"
+          echo "     Purpose: AI automation and blockchain development"
+          echo ""
+          echo "  4. 🤖 AI-Time-Machines"
+          echo "     https://github.com/lippytm/AI-Time-Machines"
+          echo "     Purpose: AI Agents integration"
+          echo ""
+          echo "═══════════════════════════════════════════════════════"
+          echo "Workflow completed successfully!"

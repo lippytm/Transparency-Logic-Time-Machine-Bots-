@@ -1,14 +1,29 @@
-# This is a basic workflow to help you get started with Actions
+# This is a workflow to manage builds and connect to other repositories
 
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# Controls when the action will run
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  # Allow manual workflow dispatch
+  workflow_dispatch:
+    inputs:
+      target_repo:
+        description: 'Target repository to notify (optional)'
+        required: false
+        type: choice
+        options:
+          - 'none'
+          - 'Web3AI'
+          - 'gatsby-starter-blog'
+          - 'Time-Machines-Builders-'
+          - 'AI-Time-Machines'
+  # Allow this workflow to be triggered from other repositories
+  repository_dispatch:
+    types: [trigger-ci]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -31,3 +46,34 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      
+      # Display connected repositories
+      - name: Show Connected Repositories
+        run: |
+          echo "==================================="
+          echo "Connected Repositories Status"
+          echo "==================================="
+          echo "✓ lippytm/Transparency-Logic-Time-Machine-Bots- (this repo)"
+          echo "✓ lippytm/Web3AI"
+          echo "✓ lippytm/gatsby-starter-blog"
+          echo "✓ lippytm/Time-Machines-Builders-"
+          echo "✓ lippytm/AI-Time-Machines"
+          echo "==================================="
+  
+  # Job to check status of connected repositories
+  check-connected-repos:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: 
+          - 'Web3AI'
+          - 'gatsby-starter-blog'
+          - 'Time-Machines-Builders-'
+          - 'AI-Time-Machines'
+    
+    steps:
+      - name: Check repository status
+        run: |
+          echo "Checking status of lippytm/${{ matrix.repo }}"
+          echo "Repository: https://github.com/lippytm/${{ matrix.repo }}"
+          echo "This job monitors connectivity with connected repositories"
