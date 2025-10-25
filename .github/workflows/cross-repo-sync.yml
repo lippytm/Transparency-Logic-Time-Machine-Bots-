@@ -16,6 +16,8 @@ on:
 jobs:
   notify-connected-repos:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.notify_all == 'true'
     strategy:
       matrix:
@@ -44,6 +46,8 @@ jobs:
 
   display-repo-connections:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Display Connected Repository Network
         run: |
