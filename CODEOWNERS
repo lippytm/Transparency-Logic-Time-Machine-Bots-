@@ -1,0 +1,17 @@
+# Default code owners for the repository
+# These owners will be requested for review when someone opens a pull request
+
+# Global fallback - all files
+* @lippytm
+
+# GitHub Actions workflows
+/.github/workflows/ @lippytm
+
+# Security and governance files
+/SECURITY.md @lippytm
+/CONTRIBUTING.md @lippytm
+/LICENSE @lippytm
+/CODEOWNERS @lippytm
+
+# Documentation
+*.md @lippytm
