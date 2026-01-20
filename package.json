@@ -1,0 +1,89 @@
+{
+  "name": "@lippytm/transparency-logic-time-machine-bots",
+  "version": "1.0.0",
+  "description": "The Grand United Fields of Theories - AI/Web3 Integration Bundle",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test test/",
+    "lint": "echo 'Linting not configured yet'",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ai",
+    "web3",
+    "blockchain",
+    "transparency",
+    "bots"
+  ],
+  "author": "lippytm",
+  "license": "MIT",
+  "peerDependencies": {
+    "@lippytm/ai-sdk": "*"
+  },
+  "peerDependenciesMeta": {
+    "@lippytm/ai-sdk": {
+      "optional": true
+    },
+    "openai": {
+      "optional": true
+    },
+    "langchain": {
+      "optional": true
+    },
+    "llamaindex": {
+      "optional": true
+    },
+    "@huggingface/transformers": {
+      "optional": true
+    },
+    "@huggingface/inference": {
+      "optional": true
+    },
+    "@pinecone-database/pinecone": {
+      "optional": true
+    },
+    "weaviate-ts-client": {
+      "optional": true
+    },
+    "chromadb": {
+      "optional": true
+    },
+    "ethers": {
+      "optional": true
+    },
+    "@solana/web3.js": {
+      "optional": true
+    },
+    "@coral-xyz/anchor": {
+      "optional": true
+    },
+    "@slack/web-api": {
+      "optional": true
+    },
+    "discord.js": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    },
+    "redis": {
+      "optional": true
+    },
+    "@aws-sdk/client-s3": {
+      "optional": true
+    },
+    "ipfs-http-client": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/pg": "^8.10.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
