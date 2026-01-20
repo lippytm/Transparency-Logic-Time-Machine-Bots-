@@ -101,23 +101,25 @@ jobs:
           if [ -f requirements-dev.txt ]; then
             pip install -r requirements-dev.txt
           fi
-          pip install flake8 black pytest || true
+          # Install linting and testing tools if not already installed
+          pip install flake8 black pytest 2>/dev/null || echo "Some tools already installed"
 
       - name: Lint with flake8
         run: |
           # Stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # Exit-zero treats all errors as warnings
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics || true
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Check formatting with black
         run: |
-          black --check . || true
+          black --check .
+        continue-on-error: true
 
       - name: Run tests with pytest
         run: |
           if [ -d "tests" ] || find . -name "test_*.py" | grep -q .; then
-            pytest || true
+            pytest
           else
             echo "No tests found, skipping..."
           fi

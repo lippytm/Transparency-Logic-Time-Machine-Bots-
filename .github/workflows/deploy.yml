@@ -24,30 +24,40 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'dev' }}
 
-    strategy:
-      matrix:
-        include:
-          - environment: dev
-            cloud_role: 'arn:aws:iam::ACCOUNT_ID:role/github-actions-dev'
-          - environment: stage
-            cloud_role: 'arn:aws:iam::ACCOUNT_ID:role/github-actions-stage'
-          - environment: prod
-            cloud_role: 'arn:aws:iam::ACCOUNT_ID:role/github-actions-prod'
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set cloud role based on environment
+        id: set-role
+        run: |
+          ENV="${{ github.event.inputs.environment || 'dev' }}"
+          case "$ENV" in
+            dev)
+              echo "cloud_role=arn:aws:iam::ACCOUNT_ID:role/github-actions-dev" >> $GITHUB_OUTPUT
+              ;;
+            stage)
+              echo "cloud_role=arn:aws:iam::ACCOUNT_ID:role/github-actions-stage" >> $GITHUB_OUTPUT
+              ;;
+            prod)
+              echo "cloud_role=arn:aws:iam::ACCOUNT_ID:role/github-actions-prod" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "cloud_role=arn:aws:iam::ACCOUNT_ID:role/github-actions-dev" >> $GITHUB_OUTPUT
+              ;;
+          esac
 
       - name: Configure AWS credentials (OIDC)
         # Placeholder for AWS OIDC authentication
         # Uncomment and configure when AWS is set up
         # uses: aws-actions/configure-aws-credentials@v4
         # with:
-        #   role-to-assume: ${{ matrix.cloud_role }}
+        #   role-to-assume: ${{ steps.set-role.outputs.cloud_role }}
         #   aws-region: us-east-1
         run: |
           echo "OIDC authentication placeholder"
           echo "Environment: ${{ github.event.inputs.environment || 'dev' }}"
+          echo "Cloud role: ${{ steps.set-role.outputs.cloud_role }}"
 
       - name: Configure GCP credentials (OIDC)
         # Placeholder for GCP OIDC authentication
