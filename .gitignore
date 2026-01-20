@@ -9,6 +9,7 @@ build/
 *.js
 *.d.ts
 !src/**/*.ts
+!test/**/*.js
 
 # Python
 __pycache__/
