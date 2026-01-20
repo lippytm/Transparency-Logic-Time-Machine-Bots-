@@ -1,0 +1,147 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - stage
+          - prod
+
+permissions:
+  contents: read
+  id-token: write  # Required for OIDC authentication
+
+jobs:
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment || 'dev' }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'dev' }}
+
+    strategy:
+      matrix:
+        include:
+          - environment: dev
+            cloud_role: 'arn:aws:iam::ACCOUNT_ID:role/github-actions-dev'
+          - environment: stage
+            cloud_role: 'arn:aws:iam::ACCOUNT_ID:role/github-actions-stage'
+          - environment: prod
+            cloud_role: 'arn:aws:iam::ACCOUNT_ID:role/github-actions-prod'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        # Placeholder for AWS OIDC authentication
+        # Uncomment and configure when AWS is set up
+        # uses: aws-actions/configure-aws-credentials@v4
+        # with:
+        #   role-to-assume: ${{ matrix.cloud_role }}
+        #   aws-region: us-east-1
+        run: |
+          echo "OIDC authentication placeholder"
+          echo "Environment: ${{ github.event.inputs.environment || 'dev' }}"
+
+      - name: Configure GCP credentials (OIDC)
+        # Placeholder for GCP OIDC authentication
+        # Uncomment and configure when GCP is set up
+        # uses: google-github-actions/auth@v2
+        # with:
+        #   workload_identity_provider: 'projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID'
+        #   service_account: 'github-actions@PROJECT_ID.iam.gserviceaccount.com'
+        run: |
+          echo "GCP OIDC authentication placeholder"
+
+      - name: Configure Azure credentials (OIDC)
+        # Placeholder for Azure OIDC authentication
+        # Uncomment and configure when Azure is set up
+        # uses: azure/login@v1
+        # with:
+        #   client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        #   tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        #   subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          echo "Azure OIDC authentication placeholder"
+
+      - name: Set environment variables
+        run: |
+          echo "Setting up environment variables (use GitHub Secrets/Variables in production)"
+          # WEB3_RPC_URL: ${{ vars.WEB3_RPC_URL || secrets.WEB3_RPC_URL }}
+          # OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          # DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          # DB_URL: ${{ secrets.DB_URL }}
+          # S3_BUCKET: ${{ vars.S3_BUCKET }}
+          echo "Environment variables configured"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: ${{ hashFiles('yarn.lock') != '' && 'yarn' || (hashFiles('package-lock.json') != '' && 'npm' || '') }}
+
+      - name: Install dependencies
+        run: |
+          if [ -f "package.json" ]; then
+            if [ -f "yarn.lock" ]; then
+              yarn install --frozen-lockfile
+            elif [ -f "package-lock.json" ]; then
+              npm ci
+            else
+              npm install
+            fi
+          fi
+
+      - name: Build application
+        run: |
+          if [ -f "package.json" ] && grep -q '"build"' package.json; then
+            if [ -f "yarn.lock" ]; then
+              yarn build
+            else
+              npm run build
+            fi
+          else
+            echo "No build script found, skipping..."
+          fi
+
+      - name: Run deployment
+        run: |
+          echo "Deployment to ${{ github.event.inputs.environment || 'dev' }} would happen here"
+          echo "Configure your deployment steps based on your infrastructure"
+          # Examples:
+          # - Deploy to AWS: aws s3 sync dist/ s3://$S3_BUCKET
+          # - Deploy to GCP: gcloud app deploy
+          # - Deploy to Azure: az webapp deploy
+          # - Deploy to Kubernetes: kubectl apply -f k8s/
+          # - Deploy to serverless: serverless deploy --stage ${{ github.event.inputs.environment }}
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          echo "Deployment ${{ job.status }}"
+          # Add notification integrations here:
+          # - Slack webhook: curl -X POST $SLACK_WEBHOOK -d '{"text":"Deployment ${{ job.status }}"}'
+          # - Discord webhook: similar to Slack
+          # - Email notification
+          # - etc.
+
+  # Separate job for each environment when triggered by push
+  deploy-on-push:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to dev environment
+        run: |
+          echo "Auto-deploying to dev on push to ${{ github.ref_name }}"
+          echo "Add your deployment logic here"
