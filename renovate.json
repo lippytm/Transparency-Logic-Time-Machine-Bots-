@@ -1,0 +1,51 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", ":dependencyDashboard", ":semanticCommits", ":separateMajorReleases"],
+  "schedule": ["before 5am on Monday"],
+  "timezone": "UTC",
+  "labels": ["dependencies"],
+  "assignees": [],
+  "reviewers": [],
+  "packageRules": [
+    {
+      "description": "Group npm dependencies",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm dependencies (non-major)"
+    },
+    {
+      "description": "Group heavy AI/ML dependencies separately",
+      "matchPackageNames": [
+        "@huggingface/transformers",
+        "pinecone-client",
+        "weaviate-ts-client",
+        "chromadb",
+        "@anchordotdev/anchor"
+      ],
+      "groupName": "heavy AI/ML dependencies",
+      "schedule": ["before 5am on the first day of the month"]
+    },
+    {
+      "description": "Group OpenTelemetry dependencies",
+      "matchPackagePatterns": ["^@opentelemetry/"],
+      "groupName": "opentelemetry packages"
+    },
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions",
+      "automerge": false
+    },
+    {
+      "description": "Automerge patch updates for dev dependencies",
+      "matchUpdateTypes": ["patch"],
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "automergeType": "pr"
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"]
+  }
+}
