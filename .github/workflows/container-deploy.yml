@@ -24,7 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: [dev, stage, prod]
+        # Build all environments on push, single environment on manual dispatch
+        environment: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('["{0}"]', github.event.inputs.environment)) || fromJSON('["dev", "stage", "prod"]') }}
     permissions:
       contents: read
       packages: write
