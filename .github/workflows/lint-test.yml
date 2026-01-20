@@ -112,6 +112,8 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Check formatting with black
+        # Note: continue-on-error allows the workflow to pass even with formatting issues
+        # Remove this flag to enforce strict formatting standards
         run: |
           black --check .
         continue-on-error: true

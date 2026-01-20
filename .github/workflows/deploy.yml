@@ -91,11 +91,23 @@ jobs:
           # S3_BUCKET: ${{ vars.S3_BUCKET }}
           echo "Environment variables configured"
 
+      - name: Determine package manager
+        id: package-manager
+        run: |
+          if [ -f "yarn.lock" ]; then
+            echo "manager=yarn" >> $GITHUB_OUTPUT
+          elif [ -f "package-lock.json" ]; then
+            echo "manager=npm" >> $GITHUB_OUTPUT
+          else
+            echo "manager=" >> $GITHUB_OUTPUT
+          fi
+
       - name: Setup Node.js
+        if: steps.package-manager.outputs.manager != ''
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: ${{ hashFiles('yarn.lock') != '' && 'yarn' || (hashFiles('package-lock.json') != '' && 'npm' || '') }}
+          cache: ${{ steps.package-manager.outputs.manager }}
 
       - name: Install dependencies
         run: |
@@ -141,17 +153,3 @@ jobs:
           # - Discord webhook: similar to Slack
           # - Email notification
           # - etc.
-
-  # Separate job for each environment when triggered by push
-  deploy-on-push:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    environment: dev
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Deploy to dev environment
-        run: |
-          echo "Auto-deploying to dev on push to ${{ github.ref_name }}"
-          echo "Add your deployment logic here"
