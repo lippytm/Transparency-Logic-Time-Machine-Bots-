@@ -6,28 +6,43 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [master, main]
   pull_request:
-    branches: [ master ]
+    branches: [master, main]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  lint-test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - name: Install dependencies
+        run: npm ci --omit=optional
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run format check
+        run: npm run format:check
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run config validation smoke test
+        run: npm run validate:config
+
+      - name: Run tests
+        run: npm test
+
