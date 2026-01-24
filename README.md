@@ -44,7 +44,8 @@ npm install ai                             # Vercel AI SDK
 npm install @huggingface/transformers      # HuggingFace Transformers
 npm install pinecone-client                # Pinecone vector database
 npm install weaviate-ts-client             # Weaviate vector database
-npm install chromadb                       # Chroma vector database (includes Google AI SDK)
+npm install chromadb                       # Chroma vector database
+npm install @google/generative-ai          # Google AI SDK (peer dependency for ChromaDB)
 npm install @anchordotdev/anchor           # Anchor.dev
 ```
 
@@ -164,7 +165,7 @@ The AI Stack supports multiple AI providers for flexibility and fallback options
 - **Anthropic Claude**: State-of-the-art conversational AI
 - **OpenAI**: GPT-4, GPT-3.5, and embeddings
 - **Cohere**: Generate, embed, and classify text
-- **Google AI**: Available via ChromaDB peer dependency
+- **Google AI**: Gemini models (peer dependency for ChromaDB - install separately if needed)
 - **HuggingFace**: Open-source transformers and models
 
 **Configuration:**
@@ -173,7 +174,8 @@ The AI Stack supports multiple AI providers for flexibility and fallback options
 # Multi-provider API keys
 OPENAI_API_KEY=your-openai-api-key
 COHERE_API_KEY=your-cohere-api-key
-# Note: Google AI SDK is available via ChromaDB peer dependency
+# Note: For Google AI, install @google/generative-ai separately (peer dependency for ChromaDB)
+# GOOGLE_API_KEY=your-google-api-key
 ```
 
 ### Vector Databases
