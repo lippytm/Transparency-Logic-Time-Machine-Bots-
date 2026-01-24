@@ -8,13 +8,14 @@ The Grand United Fields of Theories
 
 ## Overview
 
-This project includes comprehensive quality and hardening features:
+This project includes comprehensive quality, hardening features, and a full AI Stack:
 
 - **Config Validation**: Type-safe configuration with Zod validation
 - **Telemetry**: Optional OpenTelemetry integration (no vendor lock-in)
 - **Security Scanning**: Trivy vulnerability scanning and SBOM generation
 - **Pre-commit Hooks**: Automatic linting and formatting
 - **Dependency Management**: Renovate for automated updates
+- **AI Stack**: Comprehensive AI tools and toolkits with Claude, LangChain, and multi-provider support
 
 ## Installation
 
@@ -35,14 +36,187 @@ Heavy AI/ML and vector database dependencies are optional. Install only what you
 npm install --include=optional
 
 # Or install specific optional dependencies:
-npm install @huggingface/transformers    # HuggingFace Transformers
-npm install pinecone-client               # Pinecone vector database
-npm install weaviate-ts-client            # Weaviate vector database
-npm install chromadb                      # Chroma vector database
-npm install @anchordotdev/anchor          # Anchor.dev
+npm install @anthropic-ai/sdk              # Anthropic Claude AI SDK
+npm install langchain @langchain/anthropic # LangChain with Claude integration
+npm install openai                         # OpenAI SDK
+npm install cohere-ai                      # Cohere AI SDK
+npm install ai                             # Vercel AI SDK
+npm install @huggingface/transformers      # HuggingFace Transformers
+npm install pinecone-client                # Pinecone vector database
+npm install weaviate-ts-client             # Weaviate vector database
+npm install chromadb                       # Chroma vector database
+npm install @google/generative-ai          # Google AI SDK (peer dependency for ChromaDB)
+npm install @anchordotdev/anchor           # Anchor.dev
 ```
 
 **Why optional?** These packages are large and not needed for basic functionality. Install only what your use case requires.
+
+## AI Stack
+
+### Full AI Toolkit with Claude
+
+This project includes a comprehensive AI Stack with support for multiple AI providers and toolkits. The stack is designed to be modular and flexible, allowing you to use only the components you need.
+
+**Key Features:**
+
+- **Claude AI Integration**: Full support for Anthropic's Claude models (Opus, Sonnet, Haiku)
+- **LangChain Integration**: Build complex AI applications with LangChain and Claude
+- **Multi-Provider Support**: OpenAI, Cohere, Google AI, and more
+- **Vector Databases**: Pinecone, Weaviate, and ChromaDB support
+- **Type-Safe Configuration**: Zod validation for all AI settings
+- **Modular Design**: Install only the AI tools you need
+
+### Claude AI Configuration
+
+Claude is Anthropic's family of state-of-the-art AI models. This project supports all Claude models with full configuration options.
+
+**Available Models:**
+
+- `claude-3-opus-20240229` - Most capable model for complex tasks
+- `claude-3-sonnet-20240229` - Balanced performance and speed
+- `claude-3-haiku-20240307` - Fastest model for simple tasks
+
+**Configuration:**
+
+```bash
+# Enable Claude AI
+CLAUDE_ENABLED=true
+CLAUDE_API_KEY=your-anthropic-api-key
+CLAUDE_MODEL=claude-3-opus-20240229
+CLAUDE_MAX_TOKENS=4096
+CLAUDE_TEMPERATURE=1.0
+```
+
+**Usage Example:**
+
+```typescript
+import Anthropic from '@anthropic-ai/sdk';
+import { loadConfig } from './config';
+
+const config = loadConfig();
+
+if (config.claude?.enabled && config.claude.apiKey) {
+  const anthropic = new Anthropic({
+    apiKey: config.claude.apiKey,
+  });
+
+  const message = await anthropic.messages.create({
+    model: config.claude.model,
+    max_tokens: config.claude.maxTokens,
+    temperature: config.claude.temperature,
+    messages: [
+      {
+        role: 'user',
+        content: 'Hello, Claude!',
+      },
+    ],
+  });
+
+  console.log(message.content);
+}
+```
+
+### LangChain Integration
+
+LangChain is a framework for developing applications powered by language models. This project includes LangChain with Claude integration.
+
+**Configuration:**
+
+```bash
+# Enable LangChain
+LANGCHAIN_ENABLED=true
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_API_KEY=your-langchain-api-key
+LANGCHAIN_PROJECT=your-project-name
+```
+
+**Usage Example:**
+
+```typescript
+import { ChatAnthropic } from '@langchain/anthropic';
+import { loadConfig } from './config';
+
+const config = loadConfig();
+
+if (config.langchain?.enabled && config.claude?.apiKey) {
+  const model = new ChatAnthropic({
+    anthropicApiKey: config.claude.apiKey,
+    modelName: config.claude.model,
+    temperature: config.claude.temperature,
+  });
+
+  const response = await model.invoke([
+    {
+      role: 'user',
+      content: 'What is LangChain?',
+    },
+  ]);
+
+  console.log(response.content);
+}
+```
+
+### Multi-Provider AI Support
+
+The AI Stack supports multiple AI providers for flexibility and fallback options.
+
+**Supported Providers:**
+
+- **Anthropic Claude**: State-of-the-art conversational AI
+- **OpenAI**: GPT-4, GPT-3.5, and embeddings
+- **Cohere**: Generate, embed, and classify text
+- **Google AI**: Gemini models (peer dependency for ChromaDB - install separately if needed)
+- **HuggingFace**: Open-source transformers and models
+
+**Configuration:**
+
+```bash
+# Multi-provider API keys
+OPENAI_API_KEY=your-openai-api-key
+COHERE_API_KEY=your-cohere-api-key
+# Note: For Google AI, install @google/generative-ai separately (peer dependency for ChromaDB)
+# GOOGLE_API_KEY=your-google-api-key
+```
+
+### Vector Databases
+
+Vector databases are essential for AI applications that require semantic search and retrieval.
+
+**Supported Vector Databases:**
+
+- **Pinecone**: Managed vector database with high performance
+- **Weaviate**: Open-source vector search engine
+- **ChromaDB**: AI-native embedding database
+
+**Configuration:**
+
+```bash
+VECTOR_DB_ENABLED=true
+VECTOR_DB_TYPE=pinecone
+VECTOR_DB_API_KEY=your-api-key
+VECTOR_DB_ENDPOINT=https://your-instance.vectordb.com
+```
+
+### AI Stack Installation
+
+Install the complete AI Stack or individual components:
+
+```bash
+# Complete AI Stack
+npm install --include=optional
+
+# Claude AI only
+npm install @anthropic-ai/sdk
+
+# LangChain with Claude
+npm install langchain @langchain/anthropic
+
+# Vector databases
+npm install pinecone-client weaviate-ts-client chromadb
+
+# Multi-provider support
+npm install openai cohere-ai
+```
 
 ## Configuration
 
@@ -57,7 +231,11 @@ The project uses Zod for runtime configuration validation. Configuration is load
 - `PORT`: Server port (default: 3000)
 - `LOG_LEVEL`: Logging level (debug|info|warn|error, default: info)
 - `TELEMETRY_*`: Optional telemetry settings
-- `AI_*`: Optional AI/ML settings
+- `AI_*`: Optional AI/ML settings (HuggingFace)
+- `CLAUDE_*`: Optional Claude AI settings (Anthropic)
+- `LANGCHAIN_*`: Optional LangChain settings
+- `OPENAI_API_KEY`: Optional OpenAI API key
+- `COHERE_API_KEY`: Optional Cohere API key
 - `VECTOR_DB_*`: Optional vector database settings
 
 **Example:**
