@@ -38,6 +38,15 @@ export const ConfigSchema = z.object({
       endpoint: z.string().url().optional(),
     })
     .optional(),
+
+  // Sandbox settings (optional)
+  sandbox: z
+    .object({
+      enabled: z.coerce.boolean().default(false),
+      defaultTimeout: z.coerce.number().int().positive().default(30000),
+      logLevel: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+    })
+    .optional(),
 });
 
 export type Config = z.infer<typeof ConfigSchema>;
@@ -69,6 +78,11 @@ export function loadConfig(): Config {
       type: process.env.VECTOR_DB_TYPE,
       apiKey: process.env.VECTOR_DB_API_KEY,
       endpoint: process.env.VECTOR_DB_ENDPOINT,
+    },
+    sandbox: {
+      enabled: process.env.SANDBOX_ENABLED,
+      defaultTimeout: process.env.SANDBOX_DEFAULT_TIMEOUT,
+      logLevel: process.env.SANDBOX_LOG_LEVEL,
     },
   };
 
