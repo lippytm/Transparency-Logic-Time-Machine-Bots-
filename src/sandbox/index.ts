@@ -99,10 +99,12 @@ export class Sandbox {
 
     this.log('info', `Starting sandbox execution: ${this.name}`);
 
+    let timeoutId: NodeJS.Timeout | undefined;
+
     try {
-      // Create a timeout promise
+      // Create a timeout promise with cleanup
       const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => {
+        timeoutId = setTimeout(() => {
           reject(new Error(`Sandbox execution timeout after ${this.timeout}ms`));
         }, this.timeout);
       });
@@ -131,6 +133,11 @@ export class Sandbox {
         duration,
         logs: [...this.logs],
       };
+    } finally {
+      // Clean up timeout to prevent memory leaks
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId);
+      }
     }
   }
 

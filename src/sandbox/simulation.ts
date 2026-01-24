@@ -105,13 +105,31 @@ export class SimulationRunner {
 
     return {
       scenarioName: scenario.name,
-      success: result.success && (validated === undefined || validated === true),
+      success: this.determineSuccess(result.success, validated),
       output: result.data,
       error: result.error,
       duration: result.duration,
       validated,
       logs: result.logs,
     };
+  }
+
+  /**
+   * Determine overall success based on execution and validation results
+   */
+  private determineSuccess(executionSuccess: boolean, validated: boolean | undefined): boolean {
+    // If execution failed, scenario failed
+    if (!executionSuccess) {
+      return false;
+    }
+
+    // If no validation was performed, success is based on execution only
+    if (validated === undefined) {
+      return true;
+    }
+
+    // If validation was performed, it must pass
+    return validated === true;
   }
 
   /**
