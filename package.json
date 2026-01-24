@@ -43,9 +43,9 @@
   "optionalDependencies": {
     "@anthropic-ai/sdk": "^0.20.0",
     "@huggingface/transformers": "^2.6.0",
-    "langchain": "^0.1.0",
-    "@langchain/anthropic": "^0.1.0",
-    "@langchain/community": "^0.0.40",
+    "langchain": "^0.3.80",
+    "@langchain/anthropic": "^0.3.0",
+    "@langchain/community": "^0.3.0",
     "pinecone-client": "^1.1.0",
     "weaviate-ts-client": "^1.4.0",
     "chromadb": "^1.7.0",
