@@ -52,7 +52,7 @@
     "@anchordotdev/anchor": "^0.1.0",
     "openai": "^4.28.0",
     "cohere-ai": "^7.7.0",
-    "ai": "^3.0.0"
+    "ai": "^6.0.49"
   },
   "lint-staged": {
     "*.{ts,js}": [
