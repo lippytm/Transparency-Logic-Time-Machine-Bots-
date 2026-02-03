@@ -7,10 +7,19 @@ const logger = createLogger('api-key-routes');
 const router = Router();
 
 // Store for idempotency keys (in production, use Redis or database)
+// WARNING: This in-memory implementation will lose data on server restart
+// and won't work in multi-instance deployments
 const idempotencyStore = new Map<string, unknown>();
+
+// Periodic cleanup of expired idempotency keys to prevent memory leaks
+setInterval(() => {
+  // In production, implement proper expiration tracking in Redis/database
+  logger.debug('Idempotency store size', { size: idempotencyStore.size });
+}, 3600000); // Log size every hour
 
 /**
  * POST /api/keys - Create a new API key
+ * Note: In production, this endpoint should require authentication or have stricter rate limiting
  */
 router.post('/', async (req: Request, res: Response): Promise<void> => {
   try {

@@ -301,5 +301,7 @@ export async function triggerWebhooks(
   });
 
   // Deliver webhooks in parallel
+  // Note: In production, consider implementing a concurrency limit or queue-based
+  // delivery system to prevent resource exhaustion with many webhooks
   await Promise.all(webhooks.map((webhook) => deliverWebhook(webhook, eventType, payload, config)));
 }

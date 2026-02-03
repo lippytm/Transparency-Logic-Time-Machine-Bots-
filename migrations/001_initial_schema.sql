@@ -24,6 +24,8 @@ CREATE INDEX IF NOT EXISTS idx_api_keys_prefix ON api_keys(prefix);
 CREATE INDEX IF NOT EXISTS idx_api_keys_owner ON api_keys(owner);
 
 -- Webhooks table
+-- Note: Webhook secrets are stored in plaintext as they must be retrievable for HMAC signature generation.
+-- In production environments with strict security requirements, consider implementing encryption at rest.
 CREATE TABLE IF NOT EXISTS webhooks (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     owner VARCHAR(255) NOT NULL,

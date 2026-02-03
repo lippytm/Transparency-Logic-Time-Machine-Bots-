@@ -179,7 +179,7 @@ Response:
 }
 ```
 
-**Important**: The full token is only returned once during creation. Store it securely!
+**Important**: The full token is only returned once during creation. Store it securely! If using an Idempotency-Key, the same response (including the token) will be returned for duplicate requests with that key within 24 hours.
 
 #### List API Keys
 

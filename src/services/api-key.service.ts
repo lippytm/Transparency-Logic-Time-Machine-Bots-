@@ -153,6 +153,8 @@ export async function verifyApiKey(token: string, pepper?: string): Promise<ApiK
   );
 
   // Try to verify the secret against each key with matching prefix
+  // Note: This sequential verification can leak timing information about the number of keys.
+  // For production, consider limiting the number of keys per prefix or using constant-time verification.
   for (const row of result.rows) {
     const isValid = await verifySecret(row.hashed_secret, secret, pepper);
     if (isValid) {

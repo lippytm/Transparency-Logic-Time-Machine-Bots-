@@ -50,10 +50,11 @@ export async function query<T extends QueryResultRow = QueryResultRow>(
   try {
     const result = await pool.query<T>(text, params);
     const duration = Date.now() - start;
-    logger.debug('Executed query', { text, duration, rows: result.rowCount });
+    // Only log query structure, not parameters to avoid exposing sensitive data
+    logger.debug('Executed query', { duration, rows: result.rowCount });
     return result;
   } catch (error) {
-    logger.error('Query error', error instanceof Error ? error : undefined, { text });
+    logger.error('Query error', error instanceof Error ? error : undefined);
     throw error;
   }
 }
