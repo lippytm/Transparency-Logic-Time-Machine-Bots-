@@ -211,6 +211,13 @@ export class SearchService {
   /**
    * Search for items using text query
    * This is the "second way" to find items
+   *
+   * TODO: Text-to-vector conversion will require an embedding model such as:
+   * - HuggingFace Transformers (e.g., 'sentence-transformers/all-MiniLM-L6-v2')
+   * - OpenAI Embeddings API (e.g., 'text-embedding-ada-002')
+   * - Cohere Embed API
+   * The embedding model should produce vectors matching the dimensions expected
+   * by your vector database index (commonly 384, 768, or 1536 dimensions).
    */
   async searchByText(text: string, topK = 10): Promise<SearchResult[]> {
     if (!this.database) {

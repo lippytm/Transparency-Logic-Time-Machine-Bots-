@@ -41,6 +41,11 @@ test('SearchService initialization with Pinecone', async () => {
     apiKey: 'test-key',
   });
   await assert.doesNotReject(service.initialize(), 'Should initialize with Pinecone');
+
+  // Verify service is usable after initialization
+  const results = await service.searchByVector([0.1, 0.2]);
+  assert.ok(Array.isArray(results), 'Should be able to search after initialization');
+
   await service.close();
 });
 
@@ -51,6 +56,11 @@ test('SearchService initialization with Weaviate', async () => {
     endpoint: 'http://localhost:8080',
   });
   await assert.doesNotReject(service.initialize(), 'Should initialize with Weaviate');
+
+  // Verify service is usable after initialization
+  const results = await service.searchByText('test');
+  assert.ok(Array.isArray(results), 'Should be able to search after initialization');
+
   await service.close();
 });
 
@@ -61,6 +71,11 @@ test('SearchService initialization with Chroma', async () => {
     endpoint: 'http://localhost:8000',
   });
   await assert.doesNotReject(service.initialize(), 'Should initialize with Chroma');
+
+  // Verify service is usable after initialization
+  const results = await service.searchByVector([0.3, 0.7]);
+  assert.ok(Array.isArray(results), 'Should be able to search after initialization');
+
   await service.close();
 });
 
