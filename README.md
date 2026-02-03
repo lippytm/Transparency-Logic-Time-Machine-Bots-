@@ -188,6 +188,27 @@ const profile = await connector.getUserProfile('user123');
 - **Broadcast Messaging**: Send messages to multiple platforms simultaneously
 - **Platform Status**: Check if platforms are ready and enabled
 
+### Running the Example
+
+To see the cross-platform integration in action, run the included example:
+
+```bash
+# Build the project first
+npm run build
+
+# Run the platform integration example
+npm run example:platforms
+```
+
+This will demonstrate:
+
+- Initializing multiple platform connectors
+- Sending messages to specific platforms
+- Broadcasting to all platforms
+- Handling incoming webhooks
+- Retrieving user profiles
+- Checking platform status
+
 ## Telemetry
 
 ### OpenTelemetry Integration

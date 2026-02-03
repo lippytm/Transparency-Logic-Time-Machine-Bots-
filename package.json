@@ -11,6 +11,7 @@
     "test": "node --test",
     "validate:config": "node dist/config/validator.js",
     "build": "tsc",
+    "example:platforms": "node dist/examples/platform-integration.js",
     "prepare": "husky install || true"
   },
   "keywords": [
