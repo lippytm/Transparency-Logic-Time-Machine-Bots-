@@ -11,6 +11,7 @@ The Grand United Fields of Theories
 This project includes comprehensive quality and hardening features:
 
 - **Config Validation**: Type-safe configuration with Zod validation
+- **Vector Search**: Unified search interface for multiple vector databases
 - **Telemetry**: Optional OpenTelemetry integration (no vendor lock-in)
 - **Security Scanning**: Trivy vulnerability scanning and SBOM generation
 - **Pre-commit Hooks**: Automatic linting and formatting
@@ -81,6 +82,61 @@ npm run validate:config
 ```
 
 The validation performs no network calls - only local parsing and validation.
+
+## Vector Search
+
+### Search Functionality
+
+The project provides a unified search interface across multiple vector database backends. You can find items using **both ways**:
+
+1. **Vector-based search**: Search using embedding vectors
+2. **Text-based search**: Search using natural language text queries
+
+**Supported Vector Databases:**
+
+- **Pinecone**: Cloud-native vector database
+- **Weaviate**: On-premise or cloud vector database
+- **Chroma**: Lightweight local/embedded vector database
+
+**Enable Vector Search:**
+
+```bash
+# Set in .env file
+VECTOR_DB_ENABLED=true
+VECTOR_DB_TYPE=chroma                    # Options: pinecone, weaviate, chroma
+VECTOR_DB_ENDPOINT=http://localhost:8000 # Optional - database endpoint
+VECTOR_DB_API_KEY=your-api-key          # Optional - for cloud services
+```
+
+**Usage Example:**
+
+```typescript
+import { SearchService } from './search';
+
+// Initialize the search service
+const searchService = new SearchService({
+  enabled: true,
+  type: 'chroma',
+  endpoint: 'http://localhost:8000',
+});
+await searchService.initialize();
+
+// Search by vector (first way)
+const vectorResults = await searchService.searchByVector([0.5, 0.5, 0.5], 10);
+
+// Search by text (second way)
+const textResults = await searchService.searchByText('find this item', 10);
+
+// Clean up
+await searchService.close();
+```
+
+**Features:**
+
+- Abstracted interface works with all supported databases
+- Automatic initialization and connection management
+- Graceful shutdown handling
+- Comprehensive logging and telemetry integration
 
 ## Telemetry
 
@@ -249,11 +305,12 @@ Check Issues tab for the Renovate Dependency Dashboard
 ## Project Structure
 
 ```
-.
 ├── src/
 │   ├── config/          # Configuration validation module
 │   │   ├── index.ts     # Config schema and loader
 │   │   └── validator.ts # Smoke test script
+│   ├── search/          # Vector database search interface
+│   │   └── index.ts     # SearchService and database adapters
 │   ├── telemetry/       # OpenTelemetry integration
 │   │   └── index.ts     # Tracer and logger setup
 │   └── index.ts         # Main entry point
