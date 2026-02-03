@@ -4,8 +4,10 @@
 
 import { loadConfig } from './config';
 import { initTelemetry, createLogger, shutdownTelemetry } from './telemetry';
+import { PlatformManager } from './platforms';
 
 const logger = createLogger('main');
+let platformManager: PlatformManager | null = null;
 
 async function main() {
   try {
@@ -27,6 +29,24 @@ async function main() {
       });
     }
 
+    // Initialize platform manager if platforms are configured
+    if (config.platforms) {
+      logger.info('Initializing platform connectors...');
+      platformManager = new PlatformManager({
+        manychat: config.platforms.manychat,
+        botbuilders: config.platforms.botbuilders,
+        openclaw: config.platforms.openclaw,
+        moltbook: config.platforms.moltbook,
+      });
+      await platformManager.initialize();
+
+      const enabledPlatforms = platformManager.getEnabledPlatforms();
+      logger.info('Platform connectors initialized', {
+        platforms: enabledPlatforms,
+        count: enabledPlatforms.length,
+      });
+    }
+
     logger.info('Application started successfully');
 
     // Your application logic here
@@ -38,17 +58,17 @@ async function main() {
 }
 
 // Graceful shutdown
-process.on('SIGTERM', async () => {
-  logger.info('SIGTERM received, shutting down gracefully...');
+async function shutdown() {
+  logger.info('Shutting down gracefully...');
+  if (platformManager) {
+    await platformManager.shutdown();
+  }
   await shutdownTelemetry();
   process.exit(0);
-});
+}
 
-process.on('SIGINT', async () => {
-  logger.info('SIGINT received, shutting down gracefully...');
-  await shutdownTelemetry();
-  process.exit(0);
-});
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
 
 // Start the application
 main();

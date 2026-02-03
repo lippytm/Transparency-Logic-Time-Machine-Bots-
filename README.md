@@ -8,8 +8,9 @@ The Grand United Fields of Theories
 
 ## Overview
 
-This project includes comprehensive quality and hardening features:
+This project includes comprehensive quality and hardening features, along with cross-platform bot integration:
 
+- **Cross-Platform Connectivity**: Integration with ManyChat, BotBuilders, OpenClaw, and Moltbook
 - **Config Validation**: Type-safe configuration with Zod validation
 - **Telemetry**: Optional OpenTelemetry integration (no vendor lock-in)
 - **Security Scanning**: Trivy vulnerability scanning and SBOM generation
@@ -81,6 +82,111 @@ npm run validate:config
 ```
 
 The validation performs no network calls - only local parsing and validation.
+
+## Cross-Platform Bot Integration
+
+### Supported Platforms
+
+This project provides comprehensive cross-platform connectivity for popular bot platforms:
+
+1. **ManyChat**: Facebook Messenger bot platform with webhook support
+2. **BotBuilders**: Multi-platform bot building solution with API integration
+3. **OpenClaw**: Open-source bot framework with real-time messaging
+4. **Moltbook**: Data synchronization and messaging platform
+
+### Platform Configuration
+
+Each platform can be enabled independently via environment variables:
+
+**ManyChat:**
+
+```bash
+MANYCHAT_ENABLED=true
+MANYCHAT_API_KEY=your-manychat-api-key
+MANYCHAT_WEBHOOK_URL=https://your-app.com/webhooks/manychat
+```
+
+**BotBuilders:**
+
+```bash
+BOTBUILDERS_ENABLED=true
+BOTBUILDERS_API_KEY=your-botbuilders-api-key
+BOTBUILDERS_API_SECRET=your-botbuilders-api-secret
+BOTBUILDERS_ENDPOINT=https://api.botbuilders.com
+```
+
+**OpenClaw:**
+
+```bash
+OPENCLAW_ENABLED=true
+OPENCLAW_API_KEY=your-openclaw-api-key
+OPENCLAW_WEBHOOK_URL=https://your-app.com/webhooks/openclaw
+```
+
+**Moltbook:**
+
+```bash
+MOLTBOOK_ENABLED=true
+MOLTBOOK_API_KEY=your-moltbook-api-key
+MOLTBOOK_ENDPOINT=https://api.moltbook.com
+```
+
+### Platform Usage
+
+**Initialize Platform Manager:**
+
+```typescript
+import { PlatformManager, PlatformType } from './platforms';
+
+const manager = new PlatformManager({
+  manychat: {
+    enabled: true,
+    apiKey: process.env.MANYCHAT_API_KEY,
+    webhookUrl: process.env.MANYCHAT_WEBHOOK_URL,
+  },
+  // ... other platforms
+});
+
+await manager.initialize();
+```
+
+**Send Message to Specific Platform:**
+
+```typescript
+const message = await manager.sendMessage(PlatformType.MANYCHAT, 'user123', 'Hello from the bot!');
+```
+
+**Broadcast Message to All Platforms:**
+
+```typescript
+const messages = await manager.broadcastMessage(
+  'user123',
+  'This message goes to all enabled platforms'
+);
+```
+
+**Handle Incoming Webhooks:**
+
+```typescript
+const message = await manager.handleWebhook(PlatformType.MANYCHAT, webhookPayload);
+```
+
+**Get User Profile:**
+
+```typescript
+const connector = manager.getConnector(PlatformType.MANYCHAT);
+const profile = await connector.getUserProfile('user123');
+```
+
+### Platform Features
+
+- **Unified Message Interface**: Consistent message structure across all platforms
+- **Webhook Support**: Receive messages from platform webhooks
+- **User Profile Retrieval**: Get user information from each platform
+- **Error Handling**: Graceful error handling and validation
+- **Type Safety**: Full TypeScript support with type definitions
+- **Broadcast Messaging**: Send messages to multiple platforms simultaneously
+- **Platform Status**: Check if platforms are ready and enabled
 
 ## Telemetry
 
@@ -256,6 +362,14 @@ Check Issues tab for the Renovate Dependency Dashboard
 │   │   └── validator.ts # Smoke test script
 │   ├── telemetry/       # OpenTelemetry integration
 │   │   └── index.ts     # Tracer and logger setup
+│   ├── platforms/       # Cross-platform bot integrations
+│   │   ├── types.ts     # Platform type definitions
+│   │   ├── manychat.ts  # ManyChat connector
+│   │   ├── botbuilders.ts # BotBuilders connector
+│   │   ├── openclaw.ts  # OpenClaw connector
+│   │   ├── moltbook.ts  # Moltbook connector
+│   │   ├── manager.ts   # Platform manager
+│   │   └── index.ts     # Platform exports
 │   └── index.ts         # Main entry point
 ├── .github/
 │   └── workflows/       # GitHub Actions workflows

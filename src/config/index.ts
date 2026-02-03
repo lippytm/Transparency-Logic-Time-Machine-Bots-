@@ -38,6 +38,48 @@ export const ConfigSchema = z.object({
       endpoint: z.string().url().optional(),
     })
     .optional(),
+
+  // Platform integrations (optional)
+  platforms: z
+    .object({
+      // ManyChat configuration
+      manychat: z
+        .object({
+          enabled: z.coerce.boolean().default(false),
+          apiKey: z.string().optional(),
+          webhookUrl: z.string().url().optional(),
+        })
+        .optional(),
+
+      // BotBuilders configuration
+      botbuilders: z
+        .object({
+          enabled: z.coerce.boolean().default(false),
+          apiKey: z.string().optional(),
+          apiSecret: z.string().optional(),
+          endpoint: z.string().url().optional(),
+        })
+        .optional(),
+
+      // OpenClaw configuration
+      openclaw: z
+        .object({
+          enabled: z.coerce.boolean().default(false),
+          apiKey: z.string().optional(),
+          webhookUrl: z.string().url().optional(),
+        })
+        .optional(),
+
+      // Moltbook configuration
+      moltbook: z
+        .object({
+          enabled: z.coerce.boolean().default(false),
+          apiKey: z.string().optional(),
+          endpoint: z.string().url().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
 });
 
 export type Config = z.infer<typeof ConfigSchema>;
@@ -69,6 +111,29 @@ export function loadConfig(): Config {
       type: process.env.VECTOR_DB_TYPE,
       apiKey: process.env.VECTOR_DB_API_KEY,
       endpoint: process.env.VECTOR_DB_ENDPOINT,
+    },
+    platforms: {
+      manychat: {
+        enabled: process.env.MANYCHAT_ENABLED,
+        apiKey: process.env.MANYCHAT_API_KEY,
+        webhookUrl: process.env.MANYCHAT_WEBHOOK_URL,
+      },
+      botbuilders: {
+        enabled: process.env.BOTBUILDERS_ENABLED,
+        apiKey: process.env.BOTBUILDERS_API_KEY,
+        apiSecret: process.env.BOTBUILDERS_API_SECRET,
+        endpoint: process.env.BOTBUILDERS_ENDPOINT,
+      },
+      openclaw: {
+        enabled: process.env.OPENCLAW_ENABLED,
+        apiKey: process.env.OPENCLAW_API_KEY,
+        webhookUrl: process.env.OPENCLAW_WEBHOOK_URL,
+      },
+      moltbook: {
+        enabled: process.env.MOLTBOOK_ENABLED,
+        apiKey: process.env.MOLTBOOK_API_KEY,
+        endpoint: process.env.MOLTBOOK_ENDPOINT,
+      },
     },
   };
 
