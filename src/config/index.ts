@@ -38,6 +38,30 @@ export const ConfigSchema = z.object({
       endpoint: z.string().url().optional(),
     })
     .optional(),
+
+  // Database settings
+  database: z
+    .object({
+      url: z.string().optional(),
+    })
+    .optional(),
+
+  // API key settings
+  apiKey: z
+    .object({
+      prefix: z.string().default('tltm'),
+      pepper: z.string().optional(),
+    })
+    .optional(),
+
+  // Webhook settings
+  webhook: z
+    .object({
+      maxAttempts: z.coerce.number().int().positive().default(3),
+      backoffBaseMs: z.coerce.number().int().positive().default(1000),
+      timeoutMs: z.coerce.number().int().positive().default(5000),
+    })
+    .optional(),
 });
 
 export type Config = z.infer<typeof ConfigSchema>;
@@ -69,6 +93,18 @@ export function loadConfig(): Config {
       type: process.env.VECTOR_DB_TYPE,
       apiKey: process.env.VECTOR_DB_API_KEY,
       endpoint: process.env.VECTOR_DB_ENDPOINT,
+    },
+    database: {
+      url: process.env.DATABASE_URL,
+    },
+    apiKey: {
+      prefix: process.env.API_KEY_PREFIX,
+      pepper: process.env.API_KEY_PEPPER,
+    },
+    webhook: {
+      maxAttempts: process.env.WEBHOOK_MAX_ATTEMPTS,
+      backoffBaseMs: process.env.WEBHOOK_BACKOFF_BASE_MS,
+      timeoutMs: process.env.WEBHOOK_TIMEOUT_MS,
     },
   };
 
