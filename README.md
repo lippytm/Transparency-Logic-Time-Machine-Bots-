@@ -288,7 +288,6 @@ This project includes a standardized integration framework for cross-platform se
 
 ## CI/CD
 
-
 ### Workflows
 
 **CI Workflow** (`.github/workflows/blank.yml`):

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Service configuration template for cross-platform integrations. Copy this file to services.json and populate with actual values. NEVER commit services.json with real secrets.",
-  
+
   "services": {
     "openai": {
       "enabled": false,
@@ -12,7 +12,7 @@
       "optionalEnvVars": [],
       "notes": "Set OPENAI_API_KEY in environment or GitHub secrets"
     },
-    
+
     "manychat": {
       "enabled": false,
       "apiKey": "${MANYCHAT_API_KEY}",
@@ -22,7 +22,7 @@
       "optionalEnvVars": [],
       "notes": "Set MANYCHAT_API_KEY in environment or GitHub secrets"
     },
-    
+
     "botbuilders": {
       "enabled": false,
       "apiKey": "${BOTBUILDERS_API_KEY}",
@@ -32,7 +32,7 @@
       "optionalEnvVars": ["SERVICE_BASE_URL_BOTBUILDERS"],
       "notes": "Set BOTBUILDERS_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_BOTBUILDERS"
     },
-    
+
     "moltbook": {
       "enabled": false,
       "apiKey": "${MOLTBOOK_API_KEY}",
@@ -42,7 +42,7 @@
       "optionalEnvVars": ["SERVICE_BASE_URL_MOLTBOOK"],
       "notes": "Set MOLTBOOK_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_MOLTBOOK"
     },
-    
+
     "moltbot": {
       "enabled": false,
       "apiKey": "${MOLTBOT_API_KEY}",
@@ -52,7 +52,7 @@
       "optionalEnvVars": ["SERVICE_BASE_URL_MOLTBOT"],
       "notes": "Set MOLTBOT_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_MOLTBOT"
     },
-    
+
     "openclaw": {
       "enabled": false,
       "apiKey": "${OPENCLAW_API_KEY}",
@@ -62,7 +62,7 @@
       "optionalEnvVars": ["SERVICE_BASE_URL_OPENCLAW"],
       "notes": "Set OPENCLAW_API_KEY and SERVICE_BASE_URL_OPENCLAW in environment or GitHub secrets"
     },
-    
+
     "github": {
       "enabled": false,
       "apiKey": "${GITHUB_PAT}",
@@ -72,7 +72,7 @@
       "optionalEnvVars": ["GITHUB_PAT"],
       "notes": "GITHUB_PAT is only needed for API calls beyond the current repository. Repository operations use GITHUB_TOKEN automatically."
     },
-    
+
     "webhooks": {
       "enabled": false,
       "url": "${WEBHOOK_URL}",
@@ -82,7 +82,7 @@
       "notes": "Set WEBHOOK_URL in environment or GitHub secrets for webhook notifications"
     }
   },
-  
+
   "envVarReference": {
     "description": "Reference guide for all environment variables used in service integrations",
     "secrets": {
@@ -160,7 +160,7 @@
       }
     }
   },
-  
+
   "usage": {
     "description": "How to use this configuration file",
     "steps": [
@@ -180,7 +180,7 @@
       "example": "export OPENAI_API_KEY=your-key-here"
     }
   },
-  
+
   "security": {
     "warnings": [
       "⚠️  NEVER commit real API keys or secrets to version control",
