@@ -17,6 +17,9 @@ yarn-error.log*
 .env.local
 .env.*.local
 
+# Service configuration with secrets (keep .example.json)
+config/services.json
+
 # IDE
 .vscode/
 .idea/

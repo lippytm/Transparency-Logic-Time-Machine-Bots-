@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Service configuration template for cross-platform integrations. Copy this file to services.json and populate with actual values. NEVER commit services.json with real secrets.",
+  
+  "services": {
+    "openai": {
+      "enabled": false,
+      "apiKey": "${OPENAI_API_KEY}",
+      "baseUrl": "https://api.openai.com/v1",
+      "description": "OpenAI API for AI/ML capabilities",
+      "requiredEnvVars": ["OPENAI_API_KEY"],
+      "optionalEnvVars": [],
+      "notes": "Set OPENAI_API_KEY in environment or GitHub secrets"
+    },
+    
+    "manychat": {
+      "enabled": false,
+      "apiKey": "${MANYCHAT_API_KEY}",
+      "baseUrl": "https://api.manychat.com",
+      "description": "ManyChat API for chatbot automation",
+      "requiredEnvVars": ["MANYCHAT_API_KEY"],
+      "optionalEnvVars": [],
+      "notes": "Set MANYCHAT_API_KEY in environment or GitHub secrets"
+    },
+    
+    "botbuilders": {
+      "enabled": false,
+      "apiKey": "${BOTBUILDERS_API_KEY}",
+      "baseUrl": "https://api.botbuilders.com",
+      "description": "BotBuilders API for bot development platform",
+      "requiredEnvVars": ["BOTBUILDERS_API_KEY"],
+      "optionalEnvVars": ["SERVICE_BASE_URL_BOTBUILDERS"],
+      "notes": "Set BOTBUILDERS_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_BOTBUILDERS"
+    },
+    
+    "moltbook": {
+      "enabled": false,
+      "apiKey": "${MOLTBOOK_API_KEY}",
+      "baseUrl": "https://api.moltbook.com",
+      "description": "Moltbook API integration",
+      "requiredEnvVars": ["MOLTBOOK_API_KEY"],
+      "optionalEnvVars": ["SERVICE_BASE_URL_MOLTBOOK"],
+      "notes": "Set MOLTBOOK_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_MOLTBOOK"
+    },
+    
+    "moltbot": {
+      "enabled": false,
+      "apiKey": "${MOLTBOT_API_KEY}",
+      "baseUrl": "https://api.moltbot.com",
+      "description": "Moltbot API integration",
+      "requiredEnvVars": ["MOLTBOT_API_KEY"],
+      "optionalEnvVars": ["SERVICE_BASE_URL_MOLTBOT"],
+      "notes": "Set MOLTBOT_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_MOLTBOT"
+    },
+    
+    "openclaw": {
+      "enabled": false,
+      "apiKey": "${OPENCLAW_API_KEY}",
+      "baseUrl": "${SERVICE_BASE_URL_OPENCLAW}",
+      "description": "OpenClaw API integration",
+      "requiredEnvVars": ["OPENCLAW_API_KEY"],
+      "optionalEnvVars": ["SERVICE_BASE_URL_OPENCLAW"],
+      "notes": "Set OPENCLAW_API_KEY and SERVICE_BASE_URL_OPENCLAW in environment or GitHub secrets"
+    },
+    
+    "github": {
+      "enabled": false,
+      "apiKey": "${GITHUB_PAT}",
+      "baseUrl": "https://api.github.com",
+      "description": "GitHub API for extended operations beyond current repository",
+      "requiredEnvVars": [],
+      "optionalEnvVars": ["GITHUB_PAT"],
+      "notes": "GITHUB_PAT is only needed for API calls beyond the current repository. Repository operations use GITHUB_TOKEN automatically."
+    },
+    
+    "webhooks": {
+      "enabled": false,
+      "url": "${WEBHOOK_URL}",
+      "description": "Generic webhook endpoint for notifications and integrations",
+      "requiredEnvVars": [],
+      "optionalEnvVars": ["WEBHOOK_URL"],
+      "notes": "Set WEBHOOK_URL in environment or GitHub secrets for webhook notifications"
+    }
+  },
+  
+  "envVarReference": {
+    "description": "Reference guide for all environment variables used in service integrations",
+    "secrets": {
+      "OPENAI_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for OpenAI services",
+        "example": "sk-..."
+      },
+      "MANYCHAT_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for ManyChat platform",
+        "example": "mc_..."
+      },
+      "BOTBUILDERS_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for BotBuilders platform",
+        "example": "bb_..."
+      },
+      "MOLTBOOK_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for Moltbook service",
+        "example": "mb_..."
+      },
+      "MOLTBOT_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for Moltbot service",
+        "example": "mbot_..."
+      },
+      "OPENCLAW_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for OpenClaw service",
+        "example": "oc_..."
+      },
+      "GITHUB_PAT": {
+        "type": "string",
+        "required": false,
+        "description": "Personal Access Token for GitHub API (only if extended access needed beyond current repo)",
+        "example": "ghp_..."
+      },
+      "WEBHOOK_URL": {
+        "type": "string",
+        "required": false,
+        "description": "URL endpoint for webhook notifications",
+        "example": "https://hooks.example.com/webhook/..."
+      },
+      "SERVICE_BASE_URL_OPENCLAW": {
+        "type": "string",
+        "required": false,
+        "description": "Base URL for OpenClaw API (overrides default)",
+        "example": "https://openclaw.example.com/api"
+      },
+      "SERVICE_BASE_URL_BOTBUILDERS": {
+        "type": "string",
+        "required": false,
+        "description": "Base URL for BotBuilders API (overrides default)",
+        "example": "https://botbuilders.example.com/api"
+      },
+      "SERVICE_BASE_URL_MOLTBOOK": {
+        "type": "string",
+        "required": false,
+        "description": "Base URL for Moltbook API (overrides default)",
+        "example": "https://moltbook.example.com/api"
+      },
+      "SERVICE_BASE_URL_MOLTBOT": {
+        "type": "string",
+        "required": false,
+        "description": "Base URL for Moltbot API (overrides default)",
+        "example": "https://moltbot.example.com/api"
+      }
+    }
+  },
+  
+  "usage": {
+    "description": "How to use this configuration file",
+    "steps": [
+      "1. Copy this file to services.json: cp config/services.example.json config/services.json",
+      "2. Set environment variables or GitHub secrets for the services you want to use",
+      "3. Update services.json to enable specific services (set 'enabled': true)",
+      "4. NEVER commit services.json with real API keys or secrets",
+      "5. Add config/services.json to .gitignore if not already present"
+    ],
+    "githubSecrets": {
+      "description": "To use in GitHub Actions, add secrets in repository settings",
+      "location": "Repository Settings → Secrets and variables → Actions → New repository secret",
+      "workflowUsage": "The integrations.yml workflow automatically checks for these secrets"
+    },
+    "localDevelopment": {
+      "description": "For local development, use environment variables or a .env file",
+      "example": "export OPENAI_API_KEY=your-key-here"
+    }
+  },
+  
+  "security": {
+    "warnings": [
+      "⚠️  NEVER commit real API keys or secrets to version control",
+      "⚠️  Always use environment variables or secret management systems",
+      "⚠️  Rotate keys immediately if accidentally committed",
+      "⚠️  Use GitHub's secret scanning to detect leaked credentials",
+      "⚠️  Limit API key permissions to minimum required scope"
+    ],
+    "bestPractices": [
+      "✓ Use separate API keys for development, staging, and production",
+      "✓ Regularly rotate API keys and secrets",
+      "✓ Monitor API usage for unusual activity",
+      "✓ Use GitHub's Dependabot for security updates",
+      "✓ Enable GitHub's secret scanning alerts"
+    ]
+  }
+}

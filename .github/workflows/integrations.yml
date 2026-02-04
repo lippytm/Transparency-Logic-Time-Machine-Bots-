@@ -1,0 +1,185 @@
+name: Integration Checks
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  integration-checks:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check Secret Presence
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}
+          BOTBUILDERS_API_KEY: ${{ secrets.BOTBUILDERS_API_KEY }}
+          MOLTBOOK_API_KEY: ${{ secrets.MOLTBOOK_API_KEY }}
+          MOLTBOT_API_KEY: ${{ secrets.MOLTBOT_API_KEY }}
+          OPENCLAW_API_KEY: ${{ secrets.OPENCLAW_API_KEY }}
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          SERVICE_BASE_URL_OPENCLAW: ${{ secrets.SERVICE_BASE_URL_OPENCLAW }}
+        run: |
+          echo "=== Checking Secret Presence ==="
+          echo "Note: Secret values are masked and never printed"
+          echo ""
+          
+          # Function to check if a secret is set
+          check_secret() {
+            local name=$1
+            local value=$2
+            if [ -n "$value" ]; then
+              echo "✓ $name is set"
+            else
+              echo "✗ $name is NOT set"
+            fi
+          }
+          
+          check_secret "OPENAI_API_KEY" "$OPENAI_API_KEY"
+          check_secret "MANYCHAT_API_KEY" "$MANYCHAT_API_KEY"
+          check_secret "BOTBUILDERS_API_KEY" "$BOTBUILDERS_API_KEY"
+          check_secret "MOLTBOOK_API_KEY" "$MOLTBOOK_API_KEY"
+          check_secret "MOLTBOT_API_KEY" "$MOLTBOT_API_KEY"
+          check_secret "OPENCLAW_API_KEY" "$OPENCLAW_API_KEY"
+          check_secret "GITHUB_PAT" "$GITHUB_PAT"
+          check_secret "WEBHOOK_URL" "$WEBHOOK_URL"
+          check_secret "SERVICE_BASE_URL_OPENCLAW" "$SERVICE_BASE_URL_OPENCLAW"
+          
+          echo ""
+          echo "=== Secret Presence Check Complete ==="
+
+      - name: OpenAI Connectivity Check
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "⊘ Skipping OpenAI check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running OpenAI connectivity check (dry-run)"
+          echo "  Would verify connection to: https://api.openai.com/v1/models"
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ OpenAI check complete"
+
+      - name: ManyChat Connectivity Check
+        env:
+          MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}
+        run: |
+          if [ -z "$MANYCHAT_API_KEY" ]; then
+            echo "⊘ Skipping ManyChat check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running ManyChat connectivity check (dry-run)"
+          echo "  Would verify connection to: https://api.manychat.com"
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ ManyChat check complete"
+
+      - name: BotBuilders Connectivity Check
+        env:
+          BOTBUILDERS_API_KEY: ${{ secrets.BOTBUILDERS_API_KEY }}
+        run: |
+          if [ -z "$BOTBUILDERS_API_KEY" ]; then
+            echo "⊘ Skipping BotBuilders check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running BotBuilders connectivity check (dry-run)"
+          echo "  Would verify connection to BotBuilders API endpoint"
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ BotBuilders check complete"
+
+      - name: Moltbook Connectivity Check
+        env:
+          MOLTBOOK_API_KEY: ${{ secrets.MOLTBOOK_API_KEY }}
+        run: |
+          if [ -z "$MOLTBOOK_API_KEY" ]; then
+            echo "⊘ Skipping Moltbook check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running Moltbook connectivity check (dry-run)"
+          echo "  Would verify connection to Moltbook API endpoint"
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ Moltbook check complete"
+
+      - name: Moltbot Connectivity Check
+        env:
+          MOLTBOT_API_KEY: ${{ secrets.MOLTBOT_API_KEY }}
+        run: |
+          if [ -z "$MOLTBOT_API_KEY" ]; then
+            echo "⊘ Skipping Moltbot check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running Moltbot connectivity check (dry-run)"
+          echo "  Would verify connection to Moltbot API endpoint"
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ Moltbot check complete"
+
+      - name: OpenClaw Connectivity Check
+        env:
+          OPENCLAW_API_KEY: ${{ secrets.OPENCLAW_API_KEY }}
+          SERVICE_BASE_URL_OPENCLAW: ${{ secrets.SERVICE_BASE_URL_OPENCLAW }}
+        run: |
+          if [ -z "$OPENCLAW_API_KEY" ]; then
+            echo "⊘ Skipping OpenClaw check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running OpenClaw connectivity check (dry-run)"
+          if [ -n "$SERVICE_BASE_URL_OPENCLAW" ]; then
+            echo "  Would verify connection to: \$SERVICE_BASE_URL_OPENCLAW"
+          else
+            echo "  Would verify connection to default OpenClaw endpoint"
+          fi
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ OpenClaw check complete"
+
+      - name: GitHub API Connectivity Check
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+        run: |
+          if [ -z "$GITHUB_PAT" ]; then
+            echo "⊘ Skipping GitHub API check - PAT not set"
+            echo "  (Using GITHUB_TOKEN for repository operations only)"
+            exit 0
+          fi
+          
+          echo "→ Running GitHub API connectivity check (dry-run)"
+          echo "  Would verify connection to: https://api.github.com"
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ GitHub API check complete"
+
+      - name: Webhook Connectivity Check
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        run: |
+          if [ -z "$WEBHOOK_URL" ]; then
+            echo "⊘ Skipping Webhook check - URL not set"
+            exit 0
+          fi
+          
+          echo "→ Running Webhook connectivity check (dry-run)"
+          echo "  Would verify connection to webhook endpoint"
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ Webhook check complete"
+
+      - name: Integration Summary
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   Integration Checks Complete                 ║"
+          echo "╚═══════════════════════════════════════════════╝"
+          echo ""
+          echo "All configured integration checks have been executed in dry-run mode."
+          echo "Review the logs above to see which services are configured."
+          echo ""
+          echo "To enable actual API calls, update this workflow to replace"
+          echo "dry-run placeholder checks with real connectivity tests."
