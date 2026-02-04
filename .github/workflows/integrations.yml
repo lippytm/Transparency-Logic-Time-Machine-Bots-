@@ -118,7 +118,7 @@ jobs:
           echo "Performing dry-run connectivity check for BotBuilders..."
           echo "This is a placeholder check - no actual API calls are made."
           echo ""
-          
+          # Note: Replace example.com URLs with actual API endpoints when ready for production
           echo "Would execute: curl -X GET https://api.botbuilders.example.com/status -H \"X-API-Key: [MASKED]\""
           echo "✓ BotBuilders integration check: READY (dry-run mode)"
           echo "::endgroup::"
@@ -137,7 +137,7 @@ jobs:
           echo "Performing dry-run connectivity check for Moltbook..."
           echo "This is a placeholder check - no actual API calls are made."
           echo ""
-          
+          # Note: Replace example.com URLs with actual API endpoints when ready for production
           echo "Would execute: curl -X GET https://api.moltbook.example.com/health -H \"Authorization: Bearer [MASKED]\""
           echo "✓ Moltbook integration check: READY (dry-run mode)"
           echo "::endgroup::"
@@ -156,7 +156,7 @@ jobs:
           echo "Performing dry-run connectivity check for Moltbot..."
           echo "This is a placeholder check - no actual API calls are made."
           echo ""
-          
+          # Note: Replace example.com URLs with actual API endpoints when ready for production
           echo "Would execute: curl -X GET https://api.moltbot.example.com/ping -H \"X-API-Key: [MASKED]\""
           echo "✓ Moltbot integration check: READY (dry-run mode)"
           echo "::endgroup::"
@@ -175,7 +175,7 @@ jobs:
           echo "Performing dry-run connectivity check for OpenClaw..."
           echo "This is a placeholder check - no actual API calls are made."
           echo ""
-          
+          # Note: Replace example.com URLs with actual API endpoints when ready for production
           # Use custom base URL if provided, otherwise use default
           BASE_URL="${SERVICE_BASE_URL_OPENCLAW:-https://api.openclaw.example.com}"
           echo "Base URL: $BASE_URL"
