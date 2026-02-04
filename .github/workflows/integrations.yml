@@ -1,0 +1,246 @@
+name: Service Integrations Check
+
+# Trigger only on manual dispatch by default for safety
+# Optionally uncomment 'push' trigger if you want automatic runs on main branch
+on:
+  workflow_dispatch:
+    inputs:
+      verbose:
+        description: 'Enable verbose output'
+        required: false
+        default: 'false'
+  # Uncomment to enable automatic runs on push to main
+  # push:
+  #   branches:
+  #     - main
+
+jobs:
+  integration-checks:
+    name: Cross-Platform Integration Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Check Secret Availability
+        id: secret_check
+        run: |
+          echo "::group::Secret Availability Check"
+          echo "Checking which secrets are configured (values are masked)..."
+          echo ""
+          
+          # Function to check if a secret is set
+          check_secret() {
+            local secret_name=$1
+            local secret_value=$2
+            
+            if [ -n "$secret_value" ]; then
+              echo "✓ $secret_name: PRESENT"
+              echo "${secret_name}_AVAILABLE=true" >> $GITHUB_OUTPUT
+            else
+              echo "✗ $secret_name: MISSING"
+              echo "${secret_name}_AVAILABLE=false" >> $GITHUB_OUTPUT
+            fi
+          }
+          
+          # Check all secrets
+          check_secret "OPENAI_API_KEY" "${{ secrets.OPENAI_API_KEY }}"
+          check_secret "MANYCHAT_API_KEY" "${{ secrets.MANYCHAT_API_KEY }}"
+          check_secret "BOTBUILDERS_API_KEY" "${{ secrets.BOTBUILDERS_API_KEY }}"
+          check_secret "MOLTBOOK_API_KEY" "${{ secrets.MOLTBOOK_API_KEY }}"
+          check_secret "MOLTBOT_API_KEY" "${{ secrets.MOLTBOT_API_KEY }}"
+          check_secret "OPENCLAW_API_KEY" "${{ secrets.OPENCLAW_API_KEY }}"
+          check_secret "GITHUB_PAT" "${{ secrets.GITHUB_PAT }}"
+          check_secret "WEBHOOK_URL" "${{ secrets.WEBHOOK_URL }}"
+          check_secret "SERVICE_BASE_URL_OPENCLAW" "${{ secrets.SERVICE_BASE_URL_OPENCLAW }}"
+          
+          echo ""
+          echo "::endgroup::"
+        env:
+          # All secrets are accessed through the secrets context and automatically masked
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}
+          BOTBUILDERS_API_KEY: ${{ secrets.BOTBUILDERS_API_KEY }}
+          MOLTBOOK_API_KEY: ${{ secrets.MOLTBOOK_API_KEY }}
+          MOLTBOT_API_KEY: ${{ secrets.MOLTBOT_API_KEY }}
+          OPENCLAW_API_KEY: ${{ secrets.OPENCLAW_API_KEY }}
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          SERVICE_BASE_URL_OPENCLAW: ${{ secrets.SERVICE_BASE_URL_OPENCLAW }}
+      
+      - name: OpenAI Integration Check
+        if: steps.secret_check.outputs.OPENAI_API_KEY_AVAILABLE == 'true'
+        run: |
+          echo "::group::OpenAI Connectivity Check"
+          echo "Performing dry-run connectivity check for OpenAI..."
+          echo "This is a placeholder check - no actual API calls are made."
+          echo ""
+          
+          # Placeholder curl command (dry-run)
+          echo "Would execute: curl -X GET https://api.openai.com/v1/models -H \"Authorization: Bearer [MASKED]\""
+          echo "✓ OpenAI integration check: READY (dry-run mode)"
+          echo "::endgroup::"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: OpenAI Integration Check (Skipped)
+        if: steps.secret_check.outputs.OPENAI_API_KEY_AVAILABLE != 'true'
+        run: |
+          echo "⊘ OpenAI integration check: SKIPPED (API key not configured)"
+      
+      - name: ManyChat Integration Check
+        if: steps.secret_check.outputs.MANYCHAT_API_KEY_AVAILABLE == 'true'
+        run: |
+          echo "::group::ManyChat Connectivity Check"
+          echo "Performing dry-run connectivity check for ManyChat..."
+          echo "This is a placeholder check - no actual API calls are made."
+          echo ""
+          
+          echo "Would execute: curl -X GET https://api.manychat.com/fb/subscriber -H \"Authorization: Bearer [MASKED]\""
+          echo "✓ ManyChat integration check: READY (dry-run mode)"
+          echo "::endgroup::"
+        env:
+          MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}
+      
+      - name: ManyChat Integration Check (Skipped)
+        if: steps.secret_check.outputs.MANYCHAT_API_KEY_AVAILABLE != 'true'
+        run: |
+          echo "⊘ ManyChat integration check: SKIPPED (API key not configured)"
+      
+      - name: BotBuilders Integration Check
+        if: steps.secret_check.outputs.BOTBUILDERS_API_KEY_AVAILABLE == 'true'
+        run: |
+          echo "::group::BotBuilders Connectivity Check"
+          echo "Performing dry-run connectivity check for BotBuilders..."
+          echo "This is a placeholder check - no actual API calls are made."
+          echo ""
+          
+          echo "Would execute: curl -X GET https://api.botbuilders.example.com/status -H \"X-API-Key: [MASKED]\""
+          echo "✓ BotBuilders integration check: READY (dry-run mode)"
+          echo "::endgroup::"
+        env:
+          BOTBUILDERS_API_KEY: ${{ secrets.BOTBUILDERS_API_KEY }}
+      
+      - name: BotBuilders Integration Check (Skipped)
+        if: steps.secret_check.outputs.BOTBUILDERS_API_KEY_AVAILABLE != 'true'
+        run: |
+          echo "⊘ BotBuilders integration check: SKIPPED (API key not configured)"
+      
+      - name: Moltbook Integration Check
+        if: steps.secret_check.outputs.MOLTBOOK_API_KEY_AVAILABLE == 'true'
+        run: |
+          echo "::group::Moltbook Connectivity Check"
+          echo "Performing dry-run connectivity check for Moltbook..."
+          echo "This is a placeholder check - no actual API calls are made."
+          echo ""
+          
+          echo "Would execute: curl -X GET https://api.moltbook.example.com/health -H \"Authorization: Bearer [MASKED]\""
+          echo "✓ Moltbook integration check: READY (dry-run mode)"
+          echo "::endgroup::"
+        env:
+          MOLTBOOK_API_KEY: ${{ secrets.MOLTBOOK_API_KEY }}
+      
+      - name: Moltbook Integration Check (Skipped)
+        if: steps.secret_check.outputs.MOLTBOOK_API_KEY_AVAILABLE != 'true'
+        run: |
+          echo "⊘ Moltbook integration check: SKIPPED (API key not configured)"
+      
+      - name: Moltbot Integration Check
+        if: steps.secret_check.outputs.MOLTBOT_API_KEY_AVAILABLE == 'true'
+        run: |
+          echo "::group::Moltbot Connectivity Check"
+          echo "Performing dry-run connectivity check for Moltbot..."
+          echo "This is a placeholder check - no actual API calls are made."
+          echo ""
+          
+          echo "Would execute: curl -X GET https://api.moltbot.example.com/ping -H \"X-API-Key: [MASKED]\""
+          echo "✓ Moltbot integration check: READY (dry-run mode)"
+          echo "::endgroup::"
+        env:
+          MOLTBOT_API_KEY: ${{ secrets.MOLTBOT_API_KEY }}
+      
+      - name: Moltbot Integration Check (Skipped)
+        if: steps.secret_check.outputs.MOLTBOT_API_KEY_AVAILABLE != 'true'
+        run: |
+          echo "⊘ Moltbot integration check: SKIPPED (API key not configured)"
+      
+      - name: OpenClaw Integration Check
+        if: steps.secret_check.outputs.OPENCLAW_API_KEY_AVAILABLE == 'true'
+        run: |
+          echo "::group::OpenClaw Connectivity Check"
+          echo "Performing dry-run connectivity check for OpenClaw..."
+          echo "This is a placeholder check - no actual API calls are made."
+          echo ""
+          
+          # Use custom base URL if provided, otherwise use default
+          BASE_URL="${SERVICE_BASE_URL_OPENCLAW:-https://api.openclaw.example.com}"
+          echo "Base URL: $BASE_URL"
+          
+          echo "Would execute: curl -X GET $BASE_URL/status -H \"Authorization: Bearer [MASKED]\""
+          echo "✓ OpenClaw integration check: READY (dry-run mode)"
+          echo "::endgroup::"
+        env:
+          OPENCLAW_API_KEY: ${{ secrets.OPENCLAW_API_KEY }}
+          SERVICE_BASE_URL_OPENCLAW: ${{ secrets.SERVICE_BASE_URL_OPENCLAW }}
+      
+      - name: OpenClaw Integration Check (Skipped)
+        if: steps.secret_check.outputs.OPENCLAW_API_KEY_AVAILABLE != 'true'
+        run: |
+          echo "⊘ OpenClaw integration check: SKIPPED (API key not configured)"
+      
+      - name: GitHub API Integration Check
+        if: steps.secret_check.outputs.GITHUB_PAT_AVAILABLE == 'true'
+        run: |
+          echo "::group::GitHub API Connectivity Check"
+          echo "Performing dry-run connectivity check for GitHub API..."
+          echo "This is a placeholder check - no actual API calls are made."
+          echo ""
+          
+          echo "Would execute: curl -X GET https://api.github.com/user -H \"Authorization: token [MASKED]\""
+          echo "✓ GitHub API integration check: READY (dry-run mode)"
+          echo "::endgroup::"
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+      
+      - name: GitHub API Integration Check (Skipped)
+        if: steps.secret_check.outputs.GITHUB_PAT_AVAILABLE != 'true'
+        run: |
+          echo "⊘ GitHub API integration check: SKIPPED (Personal Access Token not configured)"
+      
+      - name: Webhook Integration Check
+        if: steps.secret_check.outputs.WEBHOOK_URL_AVAILABLE == 'true'
+        run: |
+          echo "::group::Webhook Connectivity Check"
+          echo "Performing dry-run connectivity check for Webhook..."
+          echo "This is a placeholder check - no actual webhook calls are made."
+          echo ""
+          
+          echo "Would execute: curl -X POST [WEBHOOK_URL_MASKED] -H \"Content-Type: application/json\" -d '{\"test\": true}'"
+          echo "✓ Webhook integration check: READY (dry-run mode)"
+          echo "::endgroup::"
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+      
+      - name: Webhook Integration Check (Skipped)
+        if: steps.secret_check.outputs.WEBHOOK_URL_AVAILABLE != 'true'
+        run: |
+          echo "⊘ Webhook integration check: SKIPPED (Webhook URL not configured)"
+      
+      - name: Summary
+        if: always()
+        run: |
+          echo "::group::Integration Checks Summary"
+          echo "==============================================="
+          echo "Service Integration Checks Completed"
+          echo "==============================================="
+          echo ""
+          echo "This workflow performed dry-run connectivity checks"
+          echo "for all configured service integrations."
+          echo ""
+          echo "All checks were executed in safe mode with no"
+          echo "actual API calls to prevent unintended side effects."
+          echo ""
+          echo "Review the logs above to see which services are"
+          echo "configured and ready for integration."
+          echo "::endgroup::"
