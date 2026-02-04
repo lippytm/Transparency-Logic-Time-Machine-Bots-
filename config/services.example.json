@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "description": "Example configuration for external service integrations. Copy to services.json and fill in actual values. NEVER commit secrets to version control.",
   "services": {
     "openai": {
