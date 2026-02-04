@@ -91,7 +91,7 @@ jobs:
           fi
           
           echo "→ Running BotBuilders connectivity check (dry-run)"
-          echo "  Would verify connection to BotBuilders API endpoint"
+          echo "  Would verify connection to: https://api.botbuilders.com"
           echo "  Status: Dry-run mode - no actual API call made"
           echo "✓ BotBuilders check complete"
 
@@ -105,7 +105,7 @@ jobs:
           fi
           
           echo "→ Running Moltbook connectivity check (dry-run)"
-          echo "  Would verify connection to Moltbook API endpoint"
+          echo "  Would verify connection to: https://api.moltbook.com"
           echo "  Status: Dry-run mode - no actual API call made"
           echo "✓ Moltbook check complete"
 
@@ -119,7 +119,7 @@ jobs:
           fi
           
           echo "→ Running Moltbot connectivity check (dry-run)"
-          echo "  Would verify connection to Moltbot API endpoint"
+          echo "  Would verify connection to: https://api.moltbot.com"
           echo "  Status: Dry-run mode - no actual API call made"
           echo "✓ Moltbot check complete"
 
