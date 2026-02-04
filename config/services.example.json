@@ -55,11 +55,11 @@
     "openclaw": {
       "enabled": false,
       "apiKey": "${OPENCLAW_API_KEY}",
-      "baseUrl": "${SERVICE_BASE_URL_OPENCLAW:-https://api.openclaw.com}",
+      "baseUrl": "https://api.openclaw.com",
       "description": "OpenClaw API integration",
       "requiredEnvVars": ["OPENCLAW_API_KEY"],
       "optionalEnvVars": ["SERVICE_BASE_URL_OPENCLAW"],
-      "notes": "Set OPENCLAW_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_OPENCLAW"
+      "notes": "Set OPENCLAW_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_OPENCLAW (default: https://api.openclaw.com)"
     },
 
     "github": {

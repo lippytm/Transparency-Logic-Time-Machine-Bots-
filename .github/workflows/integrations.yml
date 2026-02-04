@@ -135,9 +135,9 @@ jobs:
           
           echo "→ Running OpenClaw connectivity check (dry-run)"
           if [ -n "$SERVICE_BASE_URL_OPENCLAW" ]; then
-            echo "  Would verify connection to: custom base URL"
+            echo "  Would verify connection to: configured custom endpoint"
           else
-            echo "  Would verify connection to default OpenClaw endpoint"
+            echo "  Would verify connection to: https://api.openclaw.com"
           fi
           echo "  Status: Dry-run mode - no actual API call made"
           echo "✓ OpenClaw check complete"
