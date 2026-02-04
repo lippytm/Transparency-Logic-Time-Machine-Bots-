@@ -4,6 +4,7 @@ The Grand United Fields of Theories
 
 [![CI](https://github.com/lippytm/Transparency-Logic-Time-Machine-Bots-/actions/workflows/blank.yml/badge.svg)](https://github.com/lippytm/Transparency-Logic-Time-Machine-Bots-/actions/workflows/blank.yml)
 [![Security Scan](https://github.com/lippytm/Transparency-Logic-Time-Machine-Bots-/actions/workflows/security.yml/badge.svg)](https://github.com/lippytm/Transparency-Logic-Time-Machine-Bots-/actions/workflows/security.yml)
+[![Integration Checks](https://github.com/lippytm/Transparency-Logic-Time-Machine-Bots-/actions/workflows/integrations.yml/badge.svg)](https://github.com/lippytm/Transparency-Logic-Time-Machine-Bots-/actions/workflows/integrations.yml)
 [![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 
 ## Overview
@@ -229,6 +230,62 @@ Check Issues tab for the Renovate Dependency Dashboard
 
 **Configuration File:** `renovate.json`
 
+## Service Integrations
+
+### Full Stack Toolkit
+
+This project includes a standardized integration framework for cross-platform services.
+
+**Supported Services:**
+
+- **OpenAI** - AI/ML capabilities
+- **ManyChat** - Chatbot automation
+- **BotBuilders** - Bot development platform
+- **Moltbook** - Service integration
+- **Moltbot** - Service integration
+- **OpenClaw** - Service integration
+- **GitHub API** - Extended GitHub operations
+- **Webhooks** - Generic webhook notifications
+
+**Configuration:**
+
+1. Copy the example configuration:
+
+   ```bash
+   cp config/services.example.json config/services.json
+   ```
+
+2. Set environment variables or GitHub secrets for the services you want to use:
+
+   ```bash
+   export OPENAI_API_KEY=your-key-here
+   export MANYCHAT_API_KEY=your-key-here
+   # ... etc
+   ```
+
+3. **For GitHub Actions**: Add secrets in Repository Settings → Secrets and variables → Actions
+
+**Available Secrets:**
+
+- `OPENAI_API_KEY` - OpenAI API key
+- `MANYCHAT_API_KEY` - ManyChat API key
+- `BOTBUILDERS_API_KEY` - BotBuilders API key
+- `MOLTBOOK_API_KEY` - Moltbook API key
+- `MOLTBOT_API_KEY` - Moltbot API key
+- `OPENCLAW_API_KEY` - OpenClaw API key
+- `GITHUB_PAT` - GitHub Personal Access Token (for extended API access)
+- `WEBHOOK_URL` - Generic webhook endpoint URL
+- `SERVICE_BASE_URL_OPENCLAW` - Custom OpenClaw base URL (optional)
+- `SERVICE_BASE_URL_*` - Custom base URLs for other services (optional)
+
+**Security:**
+
+⚠️ **NEVER commit `config/services.json` with real secrets** - it's already in `.gitignore`
+
+✓ Always use environment variables or GitHub secrets for credentials
+
+✓ See `config/services.example.json` for detailed documentation and best practices
+
 ## CI/CD
 
 ### Workflows
@@ -245,6 +302,15 @@ Check Issues tab for the Renovate Dependency Dashboard
 - Trivy vulnerability scanning
 - SBOM generation with Syft
 - Results uploaded to GitHub Security tab
+
+**Integration Checks Workflow** (`.github/workflows/integrations.yml`):
+
+- Manual trigger via `workflow_dispatch`
+- Automatic trigger on push to `main`
+- Detects presence of service API keys (never prints secret values)
+- Placeholder connectivity checks for: OpenAI, ManyChat, BotBuilders, Moltbook, Moltbot, OpenClaw, GitHub, Webhooks
+- Dry-run oriented (safe for all environments)
+- No external dependencies (pure bash/curl)
 
 ## Project Structure
 
