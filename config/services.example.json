@@ -1,0 +1,104 @@
+{
+  "description": "Example configuration for external service integrations. Copy to services.json and fill in actual values. NEVER commit secrets to version control.",
+  "services": {
+    "openai": {
+      "description": "OpenAI API integration",
+      "env_vars": {
+        "OPENAI_API_KEY": {
+          "description": "OpenAI API key for GPT and other AI services",
+          "required": true,
+          "example": "sk-..."
+        }
+      }
+    },
+    "manychat": {
+      "description": "ManyChat bot platform integration",
+      "env_vars": {
+        "MANYCHAT_API_KEY": {
+          "description": "ManyChat API key for chatbot operations",
+          "required": true,
+          "example": "mc_..."
+        }
+      }
+    },
+    "botbuilders": {
+      "description": "BotBuilders platform integration",
+      "env_vars": {
+        "BOTBUILDERS_API_KEY": {
+          "description": "BotBuilders API key",
+          "required": true,
+          "example": "bb_..."
+        }
+      }
+    },
+    "moltbook": {
+      "description": "Moltbook service integration",
+      "env_vars": {
+        "MOLTBOOK_API_KEY": {
+          "description": "Moltbook API key",
+          "required": true,
+          "example": "mb_..."
+        }
+      }
+    },
+    "moltbot": {
+      "description": "Moltbot service integration",
+      "env_vars": {
+        "MOLTBOT_API_KEY": {
+          "description": "Moltbot API key",
+          "required": true,
+          "example": "mbot_..."
+        }
+      }
+    },
+    "openclaw": {
+      "description": "OpenClaw service integration",
+      "env_vars": {
+        "OPENCLAW_API_KEY": {
+          "description": "OpenClaw API key",
+          "required": true,
+          "example": "oc_..."
+        },
+        "SERVICE_BASE_URL_OPENCLAW": {
+          "description": "Base URL for OpenClaw API endpoints",
+          "required": false,
+          "example": "https://api.openclaw.example.com"
+        }
+      }
+    },
+    "github": {
+      "description": "GitHub API integration (beyond current repository)",
+      "env_vars": {
+        "GITHUB_PAT": {
+          "description": "GitHub Personal Access Token for extended API access",
+          "required": false,
+          "example": "ghp_..."
+        }
+      }
+    },
+    "webhooks": {
+      "description": "Webhook configurations",
+      "env_vars": {
+        "WEBHOOK_URL": {
+          "description": "Generic webhook URL for notifications and callbacks",
+          "required": false,
+          "example": "https://example.com/webhook"
+        }
+      }
+    }
+  },
+  "service_base_url_pattern": {
+    "description": "For services requiring custom base URLs, use pattern: SERVICE_BASE_URL_<SERVICE_NAME>",
+    "examples": [
+      "SERVICE_BASE_URL_OPENCLAW",
+      "SERVICE_BASE_URL_MANYCHAT",
+      "SERVICE_BASE_URL_MOLTBOOK"
+    ]
+  },
+  "notes": [
+    "All API keys should be stored in GitHub Secrets for CI/CD workflows",
+    "For local development, use .env file (never commit to git)",
+    "Required secrets must be configured for integrations workflow to succeed",
+    "Optional secrets will cause their respective checks to be skipped if not present"
+  ]
+}
