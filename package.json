@@ -22,7 +22,9 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^20.10.0",
+    "@types/pg": "^8.16.0",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
     "eslint": "^8.54.0",
@@ -34,18 +36,23 @@
   },
   "dependencies": {
     "@opentelemetry/api": "^1.7.0",
-    "@opentelemetry/sdk-node": "^0.45.0",
     "@opentelemetry/auto-instrumentations-node": "^0.40.0",
     "@opentelemetry/resources": "^1.18.0",
+    "@opentelemetry/sdk-node": "^0.45.0",
     "@opentelemetry/semantic-conventions": "^1.18.0",
+    "argon2": "^0.44.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "pg": "^8.18.0",
     "zod": "^3.22.0"
   },
   "optionalDependencies": {
+    "@anchordotdev/anchor": "^0.1.0",
     "@huggingface/transformers": "^2.6.0",
-    "pinecone-client": "^1.1.0",
-    "weaviate-ts-client": "^1.4.0",
     "chromadb": "^1.7.0",
-    "@anchordotdev/anchor": "^0.1.0"
+    "pinecone-client": "^1.1.0",
+    "weaviate-ts-client": "^1.4.0"
   },
   "lint-staged": {
     "*.{ts,js}": [

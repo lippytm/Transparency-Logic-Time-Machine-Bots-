@@ -4,6 +4,8 @@
 
 import { loadConfig } from './config';
 import { initTelemetry, createLogger, shutdownTelemetry } from './telemetry';
+import { initDatabase, closeDatabase } from './database';
+import { createApp, startServer } from './server';
 
 const logger = createLogger('main');
 
@@ -27,10 +29,21 @@ async function main() {
       });
     }
 
-    logger.info('Application started successfully');
+    // Initialize database if configured
+    if (config.database?.url) {
+      logger.info('Initializing database...');
+      initDatabase(config.database.url);
+      logger.info('Database initialized successfully');
+    } else {
+      logger.warn('Database URL not configured. Database-dependent features will not work.');
+    }
 
-    // Your application logic here
-    // ...
+    // Create and start Express server
+    logger.info('Starting HTTP server...');
+    const app = createApp();
+    startServer(app, config.app.port);
+
+    logger.info('Application started successfully');
   } catch (error) {
     logger.error('Application failed to start', error instanceof Error ? error : undefined);
     process.exit(1);
@@ -40,12 +53,14 @@ async function main() {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM received, shutting down gracefully...');
+  await closeDatabase();
   await shutdownTelemetry();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   logger.info('SIGINT received, shutting down gracefully...');
+  await closeDatabase();
   await shutdownTelemetry();
   process.exit(0);
 });

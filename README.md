@@ -58,6 +58,12 @@ The project uses Zod for runtime configuration validation. Configuration is load
 - `PORT`: Server port (default: 3000)
 - `LOG_LEVEL`: Logging level (debug|info|warn|error, default: info)
 - `TELEMETRY_*`: Optional telemetry settings
+- `DATABASE_URL`: PostgreSQL connection string (optional, required for API keys and webhooks)
+- `API_KEY_PREFIX`: API key prefix (optional, default: tltm)
+- `API_KEY_PEPPER`: API key pepper for additional security (optional)
+- `WEBHOOK_MAX_ATTEMPTS`: Maximum webhook delivery attempts (optional, default: 3)
+- `WEBHOOK_BACKOFF_BASE_MS`: Webhook retry backoff base in milliseconds (optional, default: 1000)
+- `WEBHOOK_TIMEOUT_MS`: Webhook delivery timeout in milliseconds (optional, default: 5000)
 - `AI_*`: Optional AI/ML settings
 - `VECTOR_DB_*`: Optional vector database settings
 
@@ -119,6 +125,260 @@ logger.info('Processing request', { userId: '123' });
 const span = tracer.startSpan('my-operation');
 // ... your code ...
 span.end();
+```
+
+## API Key Management
+
+### Overview
+
+The application includes a comprehensive API key management system with secure storage and authentication:
+
+- **Secure Storage**: API keys are hashed using Argon2 before storage
+- **Bearer Token Authentication**: Standard HTTP Bearer token authentication
+- **Scope-based Authorization**: Fine-grained access control using scopes
+- **Audit Logging**: All key operations are logged for security auditing
+- **Idempotency**: Support for idempotent operations using Idempotency-Key header
+
+### Database Setup
+
+Before using API keys and webhooks, you need to set up the PostgreSQL database:
+
+```bash
+# Set DATABASE_URL in your .env file
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+
+# Run the database migration
+psql $DATABASE_URL < migrations/001_initial_schema.sql
+```
+
+### API Endpoints
+
+#### Create API Key
+
+```bash
+POST /api/keys
+Content-Type: application/json
+Idempotency-Key: <optional-unique-key>
+
+{
+  "name": "My API Key",
+  "owner": "user@example.com",
+  "scopes": ["read", "write"],
+  "prefix": "tltm",  // optional, defaults to tltm
+  "pepper": "secret"  // optional, for additional security
+}
+
+Response:
+{
+  "id": "uuid",
+  "name": "My API Key",
+  "owner": "user@example.com",
+  "scopes": ["read", "write"],
+  "prefix": "tltm",
+  "token": "tltm_...",  // Only returned once!
+  "created_at": "2024-01-01T00:00:00Z"
+}
+```
+
+**Important**: The full token is only returned once during creation. Store it securely! If using an Idempotency-Key, the same response (including the token) will be returned for duplicate requests with that key within 24 hours.
+
+#### List API Keys
+
+```bash
+GET /api/keys
+Authorization: Bearer <your-api-key>
+
+Response:
+[
+  {
+    "id": "uuid",
+    "name": "My API Key",
+    "owner": "user@example.com",
+    "scopes": ["read", "write"],
+    "prefix": "tltm",
+    "last_used_at": "2024-01-01T00:00:00Z",
+    "created_at": "2024-01-01T00:00:00Z"
+  }
+]
+```
+
+#### Revoke API Key
+
+```bash
+DELETE /api/keys/:id
+Authorization: Bearer <your-api-key>
+Idempotency-Key: <optional-unique-key>
+
+Response:
+{
+  "message": "API key revoked successfully"
+}
+```
+
+## Webhook Management
+
+### Overview
+
+The webhook system enables real-time event notifications:
+
+- **Event-based Subscriptions**: Subscribe to specific event types
+- **HMAC Signature Verification**: Secure webhook deliveries with SHA-256 signatures
+- **Automatic Retries**: Configurable retry logic with exponential backoff
+- **Delivery Tracking**: Track delivery status and response metrics
+- **Replay Failed Deliveries**: Manually retry failed webhook deliveries
+
+### API Endpoints
+
+#### Create Webhook
+
+```bash
+POST /api/webhooks
+Authorization: Bearer <your-api-key>
+Content-Type: application/json
+
+{
+  "url": "https://example.com/webhook",
+  "events": ["user.created", "user.updated"],
+  "secret": "optional-webhook-secret",  // auto-generated if not provided
+  "active": true  // optional, defaults to true
+}
+
+Response:
+{
+  "id": "uuid",
+  "owner": "user@example.com",
+  "url": "https://example.com/webhook",
+  "events": ["user.created", "user.updated"],
+  "secret": "webhook-secret",
+  "active": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z"
+}
+```
+
+#### List Webhooks
+
+```bash
+GET /api/webhooks
+Authorization: Bearer <your-api-key>
+
+Response:
+[
+  {
+    "id": "uuid",
+    "owner": "user@example.com",
+    "url": "https://example.com/webhook",
+    "events": ["user.created", "user.updated"],
+    "active": true,
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-01-01T00:00:00Z"
+  }
+]
+```
+
+#### Delete Webhook
+
+```bash
+DELETE /api/webhooks/:id
+Authorization: Bearer <your-api-key>
+
+Response:
+{
+  "message": "Webhook deleted successfully"
+}
+```
+
+#### Test Webhook
+
+```bash
+POST /api/webhooks/test
+Authorization: Bearer <your-api-key>
+
+Response:
+{
+  "message": "Test delivery sent to 2 webhook(s)",
+  "deliveries": [
+    {
+      "id": "uuid",
+      "webhook_id": "uuid",
+      "status": "success",
+      "attempts": 1
+    }
+  ]
+}
+```
+
+#### Replay Failed Delivery
+
+```bash
+POST /api/webhooks/:id/replay?delivery_id=<delivery-uuid>
+Authorization: Bearer <your-api-key>
+
+Response:
+{
+  "message": "Delivery replayed",
+  "delivery": {
+    "id": "uuid",
+    "webhook_id": "uuid",
+    "event_type": "user.created",
+    "status": "success",
+    "attempts": 1
+  }
+}
+```
+
+### Webhook Signature Verification
+
+All webhook deliveries include an `X-Signature` header with HMAC SHA-256 signature:
+
+```javascript
+// Verify webhook signature in your webhook handler
+const crypto = require('crypto');
+
+function verifyWebhookSignature(payload, signature, secret) {
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(payload);
+  const expectedSignature = `sha256=${hmac.digest('hex')}`;
+
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
+}
+
+// In your webhook endpoint
+app.post('/webhook', (req, res) => {
+  const signature = req.headers['x-signature'];
+  const payload = JSON.stringify(req.body);
+  const secret = 'your-webhook-secret';
+
+  if (!verifyWebhookSignature(payload, signature, secret)) {
+    return res.status(401).json({ error: 'Invalid signature' });
+  }
+
+  // Process webhook event
+  res.status(200).json({ received: true });
+});
+```
+
+### Webhook Headers
+
+Each webhook delivery includes the following headers:
+
+- `Content-Type`: application/json
+- `X-Signature`: sha256=<hmac-signature>
+- `X-Delivery-ID`: <delivery-uuid>
+- `X-Event-Type`: <event-type>
+
+## Health Check
+
+The application includes a health check endpoint:
+
+```bash
+GET /health
+
+Response:
+{
+  "status": "ok",
+  "timestamp": "2024-01-01T00:00:00Z"
+}
 ```
 
 ## Development
