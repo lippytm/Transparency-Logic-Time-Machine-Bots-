@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
           echo "=== Checking Secret Presence ==="
           echo "Note: Secret values are masked and never printed"
           echo ""
-          
+
           # Function to check if a secret is set
           check_secret() {
             local name=$1
@@ -41,7 +41,7 @@ jobs:
               echo "✗ $name is NOT set"
             fi
           }
-          
+
           check_secret "OPENAI_API_KEY" "$OPENAI_API_KEY"
           check_secret "MANYCHAT_API_KEY" "$MANYCHAT_API_KEY"
           check_secret "BOTBUILDERS_API_KEY" "$BOTBUILDERS_API_KEY"
@@ -51,7 +51,7 @@ jobs:
           check_secret "GITHUB_PAT" "$GITHUB_PAT"
           check_secret "WEBHOOK_URL" "$WEBHOOK_URL"
           check_secret "SERVICE_BASE_URL_OPENCLAW" "$SERVICE_BASE_URL_OPENCLAW"
-          
+
           echo ""
           echo "=== Secret Presence Check Complete ==="
 
@@ -63,7 +63,7 @@ jobs:
             echo "⊘ Skipping OpenAI check - API key not set"
             exit 0
           fi
-          
+
           echo "→ Running OpenAI connectivity check (dry-run)"
           echo "  Would verify connection to: https://api.openai.com/v1/models"
           echo "  Status: Dry-run mode - no actual API call made"
@@ -77,7 +77,7 @@ jobs:
             echo "⊘ Skipping ManyChat check - API key not set"
             exit 0
           fi
-          
+
           echo "→ Running ManyChat connectivity check (dry-run)"
           echo "  Would verify connection to: https://api.manychat.com"
           echo "  Status: Dry-run mode - no actual API call made"
@@ -91,7 +91,7 @@ jobs:
             echo "⊘ Skipping BotBuilders check - API key not set"
             exit 0
           fi
-          
+
           echo "→ Running BotBuilders connectivity check (dry-run)"
           echo "  Would verify connection to: https://api.botbuilders.com"
           echo "  Status: Dry-run mode - no actual API call made"
@@ -105,7 +105,7 @@ jobs:
             echo "⊘ Skipping Moltbook check - API key not set"
             exit 0
           fi
-          
+
           echo "→ Running Moltbook connectivity check (dry-run)"
           echo "  Would verify connection to: https://api.moltbook.com"
           echo "  Status: Dry-run mode - no actual API call made"
@@ -119,7 +119,7 @@ jobs:
             echo "⊘ Skipping Moltbot check - API key not set"
             exit 0
           fi
-          
+
           echo "→ Running Moltbot connectivity check (dry-run)"
           echo "  Would verify connection to: https://api.moltbot.com"
           echo "  Status: Dry-run mode - no actual API call made"
@@ -134,7 +134,7 @@ jobs:
             echo "⊘ Skipping OpenClaw check - API key not set"
             exit 0
           fi
-          
+
           echo "→ Running OpenClaw connectivity check (dry-run)"
           if [ -n "$SERVICE_BASE_URL_OPENCLAW" ]; then
             echo "  Would verify connection to: configured custom endpoint"
@@ -153,7 +153,7 @@ jobs:
             echo "  (Using GITHUB_TOKEN for repository operations only)"
             exit 0
           fi
-          
+
           echo "→ Running GitHub API connectivity check (dry-run)"
           echo "  Would verify connection to: https://api.github.com"
           echo "  Status: Dry-run mode - no actual API call made"
@@ -167,7 +167,7 @@ jobs:
             echo "⊘ Skipping Webhook check - URL not set"
             exit 0
           fi
-          
+
           echo "→ Running Webhook connectivity check (dry-run)"
           echo "  Would verify connection to webhook endpoint"
           echo "  Status: Dry-run mode - no actual API call made"
@@ -185,3 +185,124 @@ jobs:
           echo ""
           echo "To enable actual API calls, update this workflow to replace"
           echo "dry-run placeholder checks with real connectivity tests."
+
+  security:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Semgrep (optional)
+        continue-on-error: true
+        id: install-semgrep
+        run: |
+          echo "→ Attempting to install semgrep..."
+          if command -v pip3 &> /dev/null; then
+            pip3 install --user semgrep || echo "⊘ Semgrep installation failed, will skip"
+          else
+            echo "⊘ pip3 not available, skipping semgrep installation"
+          fi
+
+          # Check if semgrep is now available
+          if command -v semgrep &> /dev/null; then
+            echo "✓ Semgrep is available"
+            echo "semgrep_available=true" >> $GITHUB_OUTPUT
+          else
+            echo "⊘ Semgrep is not available"
+            echo "semgrep_available=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Semgrep SAST
+        if: steps.install-semgrep.outputs.semgrep_available == 'true'
+        continue-on-error: true
+        run: |
+          echo "→ Running Semgrep static analysis with p/ci ruleset..."
+          semgrep --config=p/ci --quiet --severity ERROR --severity WARNING || {
+            echo "⚠ Semgrep found issues (non-blocking)"
+          }
+          echo "✓ Semgrep SAST check complete"
+
+      - name: Skip Semgrep (not available)
+        if: steps.install-semgrep.outputs.semgrep_available != 'true'
+        run: |
+          echo "⊘ Skipping Semgrep SAST - tool not available"
+
+      - name: Install ShellCheck (optional)
+        continue-on-error: true
+        id: install-shellcheck
+        run: |
+          echo "→ Attempting to install shellcheck..."
+          if command -v apt-get &> /dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -qq -y shellcheck || echo "⊘ ShellCheck installation failed, will skip"
+          else
+            echo "⊘ apt-get not available, checking if shellcheck already exists..."
+          fi
+
+          # Check if shellcheck is now available
+          if command -v shellcheck &> /dev/null; then
+            echo "✓ ShellCheck is available"
+            echo "shellcheck_available=true" >> $GITHUB_OUTPUT
+          else
+            echo "⊘ ShellCheck is not available"
+            echo "shellcheck_available=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run ShellCheck
+        if: steps.install-shellcheck.outputs.shellcheck_available == 'true'
+        continue-on-error: true
+        run: |
+          echo "→ Running ShellCheck on shell scripts..."
+
+          # Find all shell scripts
+          SHELL_FILES=$(find . -type f \( -name "*.sh" -o -name "*.bash" \) 2>/dev/null | grep -v node_modules | grep -v .git || true)
+
+          if [ -z "$SHELL_FILES" ]; then
+            echo "ℹ No shell scripts found to check"
+          else
+            echo "Found shell scripts:"
+            echo "$SHELL_FILES"
+            echo ""
+
+            # Run shellcheck on each file
+            echo "$SHELL_FILES" | xargs shellcheck --severity=warning || {
+              echo "⚠ ShellCheck found issues (non-blocking)"
+            }
+          fi
+          echo "✓ ShellCheck complete"
+
+      - name: Skip ShellCheck (not available)
+        if: steps.install-shellcheck.outputs.shellcheck_available != 'true'
+        run: |
+          echo "⊘ Skipping ShellCheck - tool not available"
+
+      - name: Basic File Security Checks
+        run: |
+          echo "→ Running basic security file checks..."
+
+          # Check for common sensitive file patterns (non-blocking)
+          echo "Checking for potential sensitive files..."
+          SENSITIVE_PATTERNS=("*.key" "*.pem" "*.p12" "*.pfx" "*_rsa" "*_dsa" "*_ecdsa" "*_ed25519")
+
+          for pattern in "${SENSITIVE_PATTERNS[@]}"; do
+            FILES=$(find . -type f -name "$pattern" 2>/dev/null | grep -v node_modules | grep -v .git || true)
+            if [ -n "$FILES" ]; then
+              echo "⚠ Found files matching $pattern:"
+              echo "$FILES"
+            fi
+          done
+
+          echo "✓ Basic security checks complete"
+
+      - name: Security Summary
+        run: |
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║   Security Checks Complete                    ║"
+          echo "╚═══════════════════════════════════════════════╝"
+          echo ""
+          echo "Minimal security checks executed with safe fallbacks."
+          echo "All checks are non-blocking - issues are reported but don't fail the build."
+          echo ""
