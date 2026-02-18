@@ -220,7 +220,7 @@ jobs:
         continue-on-error: true
         run: |
           echo "→ Running Semgrep static analysis with p/ci ruleset..."
-          semgrep --config=p/ci --quiet --severity ERROR --severity WARNING || {
+          semgrep --config=p/ci --quiet || {
             echo "⚠ Semgrep found issues (non-blocking)"
           }
           echo "✓ Semgrep SAST check complete"
@@ -256,8 +256,8 @@ jobs:
         run: |
           echo "→ Running ShellCheck on shell scripts..."
 
-          # Find all shell scripts
-          SHELL_FILES=$(find . -type f \( -name "*.sh" -o -name "*.bash" \) 2>/dev/null | grep -v node_modules | grep -v .git || true)
+          # Find all shell scripts, excluding node_modules and .git directories
+          SHELL_FILES=$(find . -type d \( -path '*/node_modules' -o -path '*/.git' \) -prune -o -type f \( -name "*.sh" -o -name "*.bash" \) -print 2>/dev/null || true)
 
           if [ -z "$SHELL_FILES" ]; then
             echo "ℹ No shell scripts found to check"
@@ -287,7 +287,7 @@ jobs:
           SENSITIVE_PATTERNS=("*.key" "*.pem" "*.p12" "*.pfx" "*_rsa" "*_dsa" "*_ecdsa" "*_ed25519")
 
           for pattern in "${SENSITIVE_PATTERNS[@]}"; do
-            FILES=$(find . -type f -name "$pattern" 2>/dev/null | grep -v node_modules | grep -v .git || true)
+            FILES=$(find . -type d \( -path '*/node_modules' -o -path '*/.git' \) -prune -o -type f -name "$pattern" -print 2>/dev/null || true)
             if [ -n "$FILES" ]; then
               echo "⚠ Found files matching $pattern:"
               echo "$FILES"
