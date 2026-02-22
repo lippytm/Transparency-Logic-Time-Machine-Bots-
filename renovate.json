@@ -16,13 +16,21 @@
     {
       "description": "Group heavy AI/ML dependencies separately",
       "matchPackageNames": [
+        "@anthropic-ai/sdk",
+        "langchain",
+        "@langchain/anthropic",
+        "@langchain/community",
+        "openai",
+        "cohere-ai",
+        "@google/generative-ai",
+        "ai",
         "@huggingface/transformers",
         "pinecone-client",
         "weaviate-ts-client",
         "chromadb",
         "@anchordotdev/anchor"
       ],
-      "groupName": "heavy AI/ML dependencies",
+      "groupName": "AI Stack and ML dependencies",
       "schedule": ["before 5am on the first day of the month"]
     },
     {

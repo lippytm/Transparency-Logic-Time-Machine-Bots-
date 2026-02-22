@@ -30,6 +30,35 @@ export const ConfigSchema = z.object({
     })
     .optional(),
 
+  // Claude AI configuration (optional)
+  claude: z
+    .object({
+      enabled: z.coerce.boolean().default(false),
+      apiKey: z.string().optional(),
+      model: z.string().default('claude-3-opus-20240229'),
+      maxTokens: z.coerce.number().int().positive().default(4096),
+      temperature: z.coerce.number().min(0).max(2).default(1.0),
+    })
+    .optional(),
+
+  // LangChain configuration (optional)
+  langchain: z
+    .object({
+      enabled: z.coerce.boolean().default(false),
+      tracingV2: z.coerce.boolean().default(false),
+      apiKey: z.string().optional(),
+      project: z.string().optional(),
+    })
+    .optional(),
+
+  // Multi-AI provider configuration (optional)
+  aiProviders: z
+    .object({
+      openaiApiKey: z.string().optional(),
+      cohereApiKey: z.string().optional(),
+    })
+    .optional(),
+
   vectorDb: z
     .object({
       enabled: z.coerce.boolean().default(false),
@@ -63,6 +92,23 @@ export function loadConfig(): Config {
     ai: {
       enabled: process.env.AI_ENABLED,
       modelName: process.env.AI_MODEL_NAME,
+    },
+    claude: {
+      enabled: process.env.CLAUDE_ENABLED,
+      apiKey: process.env.CLAUDE_API_KEY,
+      model: process.env.CLAUDE_MODEL,
+      maxTokens: process.env.CLAUDE_MAX_TOKENS,
+      temperature: process.env.CLAUDE_TEMPERATURE,
+    },
+    langchain: {
+      enabled: process.env.LANGCHAIN_ENABLED,
+      tracingV2: process.env.LANGCHAIN_TRACING_V2,
+      apiKey: process.env.LANGCHAIN_API_KEY,
+      project: process.env.LANGCHAIN_PROJECT,
+    },
+    aiProviders: {
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      cohereApiKey: process.env.COHERE_API_KEY,
     },
     vectorDb: {
       enabled: process.env.VECTOR_DB_ENABLED,
