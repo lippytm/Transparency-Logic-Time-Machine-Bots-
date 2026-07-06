@@ -4,8 +4,10 @@
 
 import { loadConfig } from './config';
 import { initTelemetry, createLogger, shutdownTelemetry } from './telemetry';
+import { SearchService } from './search';
 
 const logger = createLogger('main');
+let searchService: SearchService | undefined;
 
 async function main() {
   try {
@@ -27,6 +29,19 @@ async function main() {
       });
     }
 
+    // Initialize search service if enabled
+    if (config.vectorDb?.enabled) {
+      logger.info('Initializing search service...');
+      searchService = new SearchService({
+        enabled: true,
+        type: config.vectorDb.type,
+        apiKey: config.vectorDb.apiKey,
+        endpoint: config.vectorDb.endpoint,
+      });
+      await searchService.initialize();
+      logger.info('Search service initialized - you can now find items both ways!');
+    }
+
     logger.info('Application started successfully');
 
     // Your application logic here
@@ -40,12 +55,18 @@ async function main() {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM received, shutting down gracefully...');
+  if (searchService) {
+    await searchService.close();
+  }
   await shutdownTelemetry();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   logger.info('SIGINT received, shutting down gracefully...');
+  if (searchService) {
+    await searchService.close();
+  }
   await shutdownTelemetry();
   process.exit(0);
 });
