@@ -13,6 +13,7 @@ This project includes comprehensive quality, hardening features, and a full AI S
 
 - **Config Validation**: Type-safe configuration with Zod validation
 - **Telemetry**: Optional OpenTelemetry integration (no vendor lock-in)
+- **Sandboxes**: Isolated execution environments for diagnostics and simulations
 - **Security Scanning**: Trivy vulnerability scanning and SBOM generation
 - **Pre-commit Hooks**: Automatic linting and formatting
 - **Dependency Management**: Renovate for automated updates
@@ -238,6 +239,7 @@ The project uses Zod for runtime configuration validation. Configuration is load
 - `OPENAI_API_KEY`: Optional OpenAI API key
 - `COHERE_API_KEY`: Optional Cohere API key
 - `VECTOR_DB_*`: Optional vector database settings
+- `SANDBOX_*`: Optional sandbox settings
 
 **Example:**
 
@@ -298,6 +300,142 @@ const span = tracer.startSpan('my-operation');
 // ... your code ...
 span.end();
 ```
+
+## Sandboxes
+
+### Overview
+
+Sandboxes provide isolated execution environments for running diagnostics and simulations. This feature is useful for transparency testing, scenario validation, and safe execution of potentially long-running or resource-intensive operations.
+
+**Enable Sandboxes:**
+
+```bash
+# Set in .env file
+SANDBOX_ENABLED=true
+SANDBOX_DEFAULT_TIMEOUT=30000  # Optional - timeout in milliseconds
+SANDBOX_LOG_LEVEL=info         # Optional - debug|info|warn|error
+```
+
+### Features
+
+- **Isolated Execution**: Run code in isolated sandbox environments
+- **Timeout Control**: Automatic timeout handling for long-running operations
+- **Error Handling**: Comprehensive error capture and reporting
+- **Logging**: Built-in logging with configurable levels
+- **Diagnostics**: Run transparency validation tests
+- **Simulations**: Execute scenario-based testing
+
+### Basic Usage
+
+```typescript
+import { runInSandbox } from './sandbox';
+
+// Simple sandbox execution
+const result = await runInSandbox('my-sandbox', async () => {
+  // Your code here
+  return { status: 'success' };
+});
+
+if (result.success) {
+  console.log('Result:', result.data);
+  console.log('Duration:', result.duration, 'ms');
+} else {
+  console.error('Error:', result.error);
+}
+```
+
+### Diagnostic Tests
+
+Run diagnostic tests for transparency validation:
+
+```typescript
+import { runDiagnostics } from './sandbox/diagnostics';
+
+const results = await runDiagnostics([
+  {
+    name: 'config-validation',
+    description: 'Validate configuration',
+    run: async () => {
+      // Your validation logic
+      return true; // pass or false to fail
+    },
+  },
+  {
+    name: 'connectivity-check',
+    description: 'Check connectivity',
+    run: async () => {
+      // Check external services
+      return true;
+    },
+  },
+]);
+
+// Results contain: name, status, message, duration, metadata
+results.forEach((r) => {
+  console.log(`${r.name}: ${r.status} (${r.duration}ms)`);
+});
+```
+
+### Simulations
+
+Run scenario-based simulations:
+
+```typescript
+import { runSimulations } from './sandbox/simulation';
+
+const results = await runSimulations([
+  {
+    name: 'high-load-scenario',
+    description: 'Test under high load',
+    input: { events: 1000 },
+    run: async (input) => {
+      // Process events
+      return { processed: input.events };
+    },
+    validate: (output) => {
+      // Optional validation
+      return output.processed === 1000;
+    },
+  },
+]);
+
+// Results contain: scenarioName, success, output, duration, validated
+results.forEach((r) => {
+  console.log(`${r.scenarioName}: ${r.success ? 'PASS' : 'FAIL'}`);
+});
+```
+
+### Advanced Usage
+
+For more control, use the Sandbox class directly:
+
+```typescript
+import { Sandbox } from './sandbox';
+
+const sandbox = new Sandbox({
+  name: 'custom-sandbox',
+  timeout: 60000, // 60 seconds
+  logLevel: 'debug',
+  isolated: true,
+});
+
+const result = await sandbox.execute(async () => {
+  // Your code here
+  return { result: 'data' };
+});
+
+// Access sandbox logs
+const logs = sandbox.getLogs();
+```
+
+### Examples
+
+See `src/sandbox/examples.ts` for complete working examples including:
+
+- Basic sandbox execution
+- Transparency diagnostics
+- Load testing simulations
+- Error handling scenarios
 
 ## Development
 
@@ -500,7 +638,15 @@ This project includes a standardized integration framework for cross-platform se
 │   │   └── validator.ts # Smoke test script
 │   ├── telemetry/       # OpenTelemetry integration
 │   │   └── index.ts     # Tracer and logger setup
+│   ├── sandbox/         # Sandbox execution environments
+│   │   ├── index.ts     # Core sandbox functionality
+│   │   ├── diagnostics.ts # Diagnostic test runner
+│   │   ├── simulation.ts  # Simulation scenario runner
+│   │   └── examples.ts    # Usage examples
 │   └── index.ts         # Main entry point
+├── test/                # Test files
+│   ├── basic.test.js    # Basic tests
+│   └── sandbox.test.js  # Sandbox tests
 ├── .github/
 │   └── workflows/       # GitHub Actions workflows
 ├── .husky/              # Git hooks
