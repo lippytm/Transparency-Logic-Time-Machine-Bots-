@@ -63,6 +63,7 @@ This project includes a comprehensive AI Stack with support for multiple AI prov
 - **Claude AI Integration**: Full support for Anthropic's Claude models (Opus, Sonnet, Haiku)
 - **LangChain Integration**: Build complex AI applications with LangChain and Claude
 - **Multi-Provider Support**: OpenAI, Cohere, Google AI, and more
+- **AI Clone Services**: Hermes, Fabric Engines, Swarms Systems, and AI Copilot integrations
 - **Vector Databases**: Pinecone, Weaviate, and ChromaDB support
 - **Type-Safe Configuration**: Zod validation for all AI settings
 - **Modular Design**: Install only the AI tools you need
@@ -166,6 +167,10 @@ The AI Stack supports multiple AI providers for flexibility and fallback options
 - **Anthropic Claude**: State-of-the-art conversational AI
 - **OpenAI**: GPT-4, GPT-3.5, and embeddings
 - **Cohere**: Generate, embed, and classify text
+- **Hermes**: AI clone orchestration
+- **Fabric Engines**: AI workflow runtime
+- **Swarms Systems**: Multi-agent coordination
+- **AI Copilot**: Assistant-style AI clone support
 - **Google AI**: Gemini models (peer dependency for ChromaDB - install separately if needed)
 - **HuggingFace**: Open-source transformers and models
 
@@ -175,6 +180,10 @@ The AI Stack supports multiple AI providers for flexibility and fallback options
 # Multi-provider API keys
 OPENAI_API_KEY=your-openai-api-key
 COHERE_API_KEY=your-cohere-api-key
+HERMES_API_KEY=your-hermes-api-key
+FABRIC_ENGINES_API_KEY=your-fabric-engines-api-key
+SWARMS_SYSTEMS_API_KEY=your-swarms-systems-api-key
+AI_COPILOT_API_KEY=your-ai-copilot-api-key
 # Note: For Google AI, install @google/generative-ai separately (peer dependency for ChromaDB)
 # GOOGLE_API_KEY=your-google-api-key
 ```
@@ -417,6 +426,10 @@ This project includes a standardized integration framework for cross-platform se
 **Supported Services:**
 
 - **OpenAI** - AI/ML capabilities
+- **Hermes** - AI clone orchestration
+- **Fabric Engines** - AI workflow runtime
+- **Swarms Systems** - Multi-agent coordination
+- **AI Copilot** - AI assistant integration
 - **ManyChat** - Chatbot automation
 - **BotBuilders** - Bot development platform
 - **Moltbook** - Service integration
@@ -437,6 +450,10 @@ This project includes a standardized integration framework for cross-platform se
 
    ```bash
    export OPENAI_API_KEY=your-key-here
+   export HERMES_API_KEY=your-key-here
+   export FABRIC_ENGINES_API_KEY=your-key-here
+   export SWARMS_SYSTEMS_API_KEY=your-key-here
+   export AI_COPILOT_API_KEY=your-key-here
    export MANYCHAT_API_KEY=your-key-here
    # ... etc
    ```
@@ -446,6 +463,10 @@ This project includes a standardized integration framework for cross-platform se
 **Available Secrets:**
 
 - `OPENAI_API_KEY` - OpenAI API key
+- `HERMES_API_KEY` - Hermes API key
+- `FABRIC_ENGINES_API_KEY` - Fabric Engines API key
+- `SWARMS_SYSTEMS_API_KEY` - Swarms Systems API key
+- `AI_COPILOT_API_KEY` - AI Copilot API key
 - `MANYCHAT_API_KEY` - ManyChat API key
 - `BOTBUILDERS_API_KEY` - BotBuilders API key
 - `MOLTBOOK_API_KEY` - Moltbook API key
@@ -453,6 +474,10 @@ This project includes a standardized integration framework for cross-platform se
 - `OPENCLAW_API_KEY` - OpenClaw API key
 - `GITHUB_PAT` - GitHub Personal Access Token (for extended API access)
 - `WEBHOOK_URL` - Generic webhook endpoint URL
+- `SERVICE_BASE_URL_HERMES` - Custom Hermes base URL (optional)
+- `SERVICE_BASE_URL_FABRIC_ENGINES` - Custom Fabric Engines base URL (optional)
+- `SERVICE_BASE_URL_SWARMS_SYSTEMS` - Custom Swarms Systems base URL (optional)
+- `SERVICE_BASE_URL_AI_COPILOT` - Custom AI Copilot base URL (optional)
 - `SERVICE_BASE_URL_OPENCLAW` - Custom OpenClaw base URL (optional)
 - `SERVICE_BASE_URL_*` - Custom base URLs for other services (optional)
 
@@ -486,7 +511,7 @@ This project includes a standardized integration framework for cross-platform se
 - Manual trigger via `workflow_dispatch`
 - Automatic trigger on push to `main`
 - Detects presence of service API keys (never prints secret values)
-- Placeholder connectivity checks for: OpenAI, ManyChat, BotBuilders, Moltbook, Moltbot, OpenClaw, GitHub, Webhooks
+- Placeholder connectivity checks for: OpenAI, Hermes, Fabric Engines, Swarms Systems, AI Copilot, ManyChat, BotBuilders, Moltbook, Moltbot, OpenClaw, GitHub, Webhooks
 - Dry-run oriented (safe for all environments)
 - No external dependencies (pure bash/curl)
 

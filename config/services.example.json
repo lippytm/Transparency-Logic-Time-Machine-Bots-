@@ -12,6 +12,46 @@
       "notes": "Set OPENAI_API_KEY in environment or GitHub secrets"
     },
 
+    "hermes": {
+      "enabled": false,
+      "apiKey": "${HERMES_API_KEY}",
+      "baseUrl": "https://api.hermes.example.com",
+      "description": "Hermes AI clone orchestration service",
+      "requiredEnvVars": ["HERMES_API_KEY"],
+      "optionalEnvVars": ["SERVICE_BASE_URL_HERMES"],
+      "notes": "Set HERMES_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_HERMES"
+    },
+
+    "fabricEngines": {
+      "enabled": false,
+      "apiKey": "${FABRIC_ENGINES_API_KEY}",
+      "baseUrl": "https://api.fabric-engines.example.com",
+      "description": "Fabric Engines AI workflow runtime",
+      "requiredEnvVars": ["FABRIC_ENGINES_API_KEY"],
+      "optionalEnvVars": ["SERVICE_BASE_URL_FABRIC_ENGINES"],
+      "notes": "Set FABRIC_ENGINES_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_FABRIC_ENGINES"
+    },
+
+    "swarmsSystems": {
+      "enabled": false,
+      "apiKey": "${SWARMS_SYSTEMS_API_KEY}",
+      "baseUrl": "https://api.swarms-systems.example.com",
+      "description": "Swarms Systems multi-agent coordination platform",
+      "requiredEnvVars": ["SWARMS_SYSTEMS_API_KEY"],
+      "optionalEnvVars": ["SERVICE_BASE_URL_SWARMS_SYSTEMS"],
+      "notes": "Set SWARMS_SYSTEMS_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_SWARMS_SYSTEMS"
+    },
+
+    "aiCopilot": {
+      "enabled": false,
+      "apiKey": "${AI_COPILOT_API_KEY}",
+      "baseUrl": "https://api.ai-copilot.example.com",
+      "description": "AI Copilot assistant integration",
+      "requiredEnvVars": ["AI_COPILOT_API_KEY"],
+      "optionalEnvVars": ["SERVICE_BASE_URL_AI_COPILOT"],
+      "notes": "Set AI_COPILOT_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_AI_COPILOT"
+    },
+
     "manychat": {
       "enabled": false,
       "apiKey": "${MANYCHAT_API_KEY}",
@@ -91,6 +131,30 @@
         "description": "API key for OpenAI services",
         "example": "sk-..."
       },
+      "HERMES_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for Hermes AI clone services",
+        "example": "hermes_..."
+      },
+      "FABRIC_ENGINES_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for Fabric Engines services",
+        "example": "fabric_..."
+      },
+      "SWARMS_SYSTEMS_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for Swarms Systems services",
+        "example": "swarms_..."
+      },
+      "AI_COPILOT_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for AI Copilot services",
+        "example": "copilot_..."
+      },
       "MANYCHAT_API_KEY": {
         "type": "string",
         "required": false,
@@ -139,6 +203,30 @@
         "description": "Base URL for OpenClaw API (overrides default)",
         "example": "https://openclaw.example.com/api"
       },
+      "SERVICE_BASE_URL_HERMES": {
+        "type": "string",
+        "required": false,
+        "description": "Base URL for Hermes API (overrides default)",
+        "example": "https://hermes.example.com/api"
+      },
+      "SERVICE_BASE_URL_FABRIC_ENGINES": {
+        "type": "string",
+        "required": false,
+        "description": "Base URL for Fabric Engines API (overrides default)",
+        "example": "https://fabric-engines.example.com/api"
+      },
+      "SERVICE_BASE_URL_SWARMS_SYSTEMS": {
+        "type": "string",
+        "required": false,
+        "description": "Base URL for Swarms Systems API (overrides default)",
+        "example": "https://swarms-systems.example.com/api"
+      },
+      "SERVICE_BASE_URL_AI_COPILOT": {
+        "type": "string",
+        "required": false,
+        "description": "Base URL for AI Copilot API (overrides default)",
+        "example": "https://ai-copilot.example.com/api"
+      },
       "SERVICE_BASE_URL_BOTBUILDERS": {
         "type": "string",
         "required": false,
@@ -166,8 +254,9 @@
       "1. Copy this file to services.json: cp config/services.example.json config/services.json",
       "2. Set environment variables or GitHub secrets for the services you want to use",
       "3. Update services.json to enable specific services (set 'enabled': true)",
-      "4. NEVER commit services.json with real API keys or secrets",
-      "5. Add config/services.json to .gitignore if not already present"
+      "4. Configure AI clone services such as Hermes, Fabric Engines, Swarms Systems, or AI Copilot only with secret-backed environment variables",
+      "5. NEVER commit services.json with real API keys or secrets",
+      "6. Add config/services.json to .gitignore if not already present"
     ],
     "githubSecrets": {
       "description": "To use in GitHub Actions, add secrets in repository settings",
