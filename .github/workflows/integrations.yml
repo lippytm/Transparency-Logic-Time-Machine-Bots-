@@ -18,6 +18,10 @@ jobs:
       - name: Check Secret Presence
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          HERMES_API_KEY: ${{ secrets.HERMES_API_KEY }}
+          FABRIC_ENGINES_API_KEY: ${{ secrets.FABRIC_ENGINES_API_KEY }}
+          SWARMS_SYSTEMS_API_KEY: ${{ secrets.SWARMS_SYSTEMS_API_KEY }}
+          AI_COPILOT_API_KEY: ${{ secrets.AI_COPILOT_API_KEY }}
           MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}
           BOTBUILDERS_API_KEY: ${{ secrets.BOTBUILDERS_API_KEY }}
           MOLTBOOK_API_KEY: ${{ secrets.MOLTBOOK_API_KEY }}
@@ -25,6 +29,10 @@ jobs:
           OPENCLAW_API_KEY: ${{ secrets.OPENCLAW_API_KEY }}
           GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          SERVICE_BASE_URL_HERMES: ${{ secrets.SERVICE_BASE_URL_HERMES }}
+          SERVICE_BASE_URL_FABRIC_ENGINES: ${{ secrets.SERVICE_BASE_URL_FABRIC_ENGINES }}
+          SERVICE_BASE_URL_SWARMS_SYSTEMS: ${{ secrets.SERVICE_BASE_URL_SWARMS_SYSTEMS }}
+          SERVICE_BASE_URL_AI_COPILOT: ${{ secrets.SERVICE_BASE_URL_AI_COPILOT }}
           SERVICE_BASE_URL_OPENCLAW: ${{ secrets.SERVICE_BASE_URL_OPENCLAW }}
         run: |
           echo "=== Checking Secret Presence ==="
@@ -43,6 +51,10 @@ jobs:
           }
           
           check_secret "OPENAI_API_KEY" "$OPENAI_API_KEY"
+          check_secret "HERMES_API_KEY" "$HERMES_API_KEY"
+          check_secret "FABRIC_ENGINES_API_KEY" "$FABRIC_ENGINES_API_KEY"
+          check_secret "SWARMS_SYSTEMS_API_KEY" "$SWARMS_SYSTEMS_API_KEY"
+          check_secret "AI_COPILOT_API_KEY" "$AI_COPILOT_API_KEY"
           check_secret "MANYCHAT_API_KEY" "$MANYCHAT_API_KEY"
           check_secret "BOTBUILDERS_API_KEY" "$BOTBUILDERS_API_KEY"
           check_secret "MOLTBOOK_API_KEY" "$MOLTBOOK_API_KEY"
@@ -50,6 +62,10 @@ jobs:
           check_secret "OPENCLAW_API_KEY" "$OPENCLAW_API_KEY"
           check_secret "GITHUB_PAT" "$GITHUB_PAT"
           check_secret "WEBHOOK_URL" "$WEBHOOK_URL"
+          check_secret "SERVICE_BASE_URL_HERMES" "$SERVICE_BASE_URL_HERMES"
+          check_secret "SERVICE_BASE_URL_FABRIC_ENGINES" "$SERVICE_BASE_URL_FABRIC_ENGINES"
+          check_secret "SERVICE_BASE_URL_SWARMS_SYSTEMS" "$SERVICE_BASE_URL_SWARMS_SYSTEMS"
+          check_secret "SERVICE_BASE_URL_AI_COPILOT" "$SERVICE_BASE_URL_AI_COPILOT"
           check_secret "SERVICE_BASE_URL_OPENCLAW" "$SERVICE_BASE_URL_OPENCLAW"
           
           echo ""
@@ -68,6 +84,82 @@ jobs:
           echo "  Would verify connection to: https://api.openai.com/v1/models"
           echo "  Status: Dry-run mode - no actual API call made"
           echo "✓ OpenAI check complete"
+
+      - name: Hermes Connectivity Check
+        env:
+          HERMES_API_KEY: ${{ secrets.HERMES_API_KEY }}
+          SERVICE_BASE_URL_HERMES: ${{ secrets.SERVICE_BASE_URL_HERMES }}
+        run: |
+          if [ -z "$HERMES_API_KEY" ]; then
+            echo "⊘ Skipping Hermes check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running Hermes connectivity check (dry-run)"
+          if [ -n "$SERVICE_BASE_URL_HERMES" ]; then
+            echo "  Would verify connection to: configured custom endpoint"
+          else
+            echo "  Would verify connection to: https://api.hermes.example.com"
+          fi
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ Hermes check complete"
+
+      - name: Fabric Engines Connectivity Check
+        env:
+          FABRIC_ENGINES_API_KEY: ${{ secrets.FABRIC_ENGINES_API_KEY }}
+          SERVICE_BASE_URL_FABRIC_ENGINES: ${{ secrets.SERVICE_BASE_URL_FABRIC_ENGINES }}
+        run: |
+          if [ -z "$FABRIC_ENGINES_API_KEY" ]; then
+            echo "⊘ Skipping Fabric Engines check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running Fabric Engines connectivity check (dry-run)"
+          if [ -n "$SERVICE_BASE_URL_FABRIC_ENGINES" ]; then
+            echo "  Would verify connection to: configured custom endpoint"
+          else
+            echo "  Would verify connection to: https://api.fabric-engines.example.com"
+          fi
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ Fabric Engines check complete"
+
+      - name: Swarms Systems Connectivity Check
+        env:
+          SWARMS_SYSTEMS_API_KEY: ${{ secrets.SWARMS_SYSTEMS_API_KEY }}
+          SERVICE_BASE_URL_SWARMS_SYSTEMS: ${{ secrets.SERVICE_BASE_URL_SWARMS_SYSTEMS }}
+        run: |
+          if [ -z "$SWARMS_SYSTEMS_API_KEY" ]; then
+            echo "⊘ Skipping Swarms Systems check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running Swarms Systems connectivity check (dry-run)"
+          if [ -n "$SERVICE_BASE_URL_SWARMS_SYSTEMS" ]; then
+            echo "  Would verify connection to: configured custom endpoint"
+          else
+            echo "  Would verify connection to: https://api.swarms-systems.example.com"
+          fi
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ Swarms Systems check complete"
+
+      - name: AI Copilot Connectivity Check
+        env:
+          AI_COPILOT_API_KEY: ${{ secrets.AI_COPILOT_API_KEY }}
+          SERVICE_BASE_URL_AI_COPILOT: ${{ secrets.SERVICE_BASE_URL_AI_COPILOT }}
+        run: |
+          if [ -z "$AI_COPILOT_API_KEY" ]; then
+            echo "⊘ Skipping AI Copilot check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running AI Copilot connectivity check (dry-run)"
+          if [ -n "$SERVICE_BASE_URL_AI_COPILOT" ]; then
+            echo "  Would verify connection to: configured custom endpoint"
+          else
+            echo "  Would verify connection to: https://api.ai-copilot.example.com"
+          fi
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ AI Copilot check complete"
 
       - name: ManyChat Connectivity Check
         env:
