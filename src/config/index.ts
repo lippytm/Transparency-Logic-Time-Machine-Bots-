@@ -67,6 +67,14 @@ export const ConfigSchema = z.object({
       endpoint: z.string().url().optional(),
     })
     .optional(),
+
+  openClaw: z
+    .object({
+      enabled: z.coerce.boolean().default(false),
+      apiKey: z.string().optional(),
+      baseUrl: z.string().url().optional(),
+    })
+    .optional(),
 });
 
 export type Config = z.infer<typeof ConfigSchema>;
@@ -115,6 +123,11 @@ export function loadConfig(): Config {
       type: process.env.VECTOR_DB_TYPE,
       apiKey: process.env.VECTOR_DB_API_KEY,
       endpoint: process.env.VECTOR_DB_ENDPOINT,
+    },
+    openClaw: {
+      enabled: process.env.OPENCLAW_ENABLED,
+      apiKey: process.env.OPENCLAW_API_KEY,
+      baseUrl: process.env.SERVICE_BASE_URL_OPENCLAW,
     },
   };
 
