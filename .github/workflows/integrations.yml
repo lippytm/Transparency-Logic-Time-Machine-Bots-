@@ -22,6 +22,7 @@ jobs:
           FABRIC_ENGINES_API_KEY: ${{ secrets.FABRIC_ENGINES_API_KEY }}
           SWARMS_SYSTEMS_API_KEY: ${{ secrets.SWARMS_SYSTEMS_API_KEY }}
           AI_COPILOT_API_KEY: ${{ secrets.AI_COPILOT_API_KEY }}
+          AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER_API_KEY: ${{ secrets.AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER_API_KEY }}
           MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}
           BOTBUILDERS_API_KEY: ${{ secrets.BOTBUILDERS_API_KEY }}
           MOLTBOOK_API_KEY: ${{ secrets.MOLTBOOK_API_KEY }}
@@ -33,6 +34,7 @@ jobs:
           SERVICE_BASE_URL_FABRIC_ENGINES: ${{ secrets.SERVICE_BASE_URL_FABRIC_ENGINES }}
           SERVICE_BASE_URL_SWARMS_SYSTEMS: ${{ secrets.SERVICE_BASE_URL_SWARMS_SYSTEMS }}
           SERVICE_BASE_URL_AI_COPILOT: ${{ secrets.SERVICE_BASE_URL_AI_COPILOT }}
+          SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER: ${{ secrets.SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER }}
           SERVICE_BASE_URL_OPENCLAW: ${{ secrets.SERVICE_BASE_URL_OPENCLAW }}
         run: |
           echo "=== Checking Secret Presence ==="
@@ -55,6 +57,7 @@ jobs:
           check_secret "FABRIC_ENGINES_API_KEY" "$FABRIC_ENGINES_API_KEY"
           check_secret "SWARMS_SYSTEMS_API_KEY" "$SWARMS_SYSTEMS_API_KEY"
           check_secret "AI_COPILOT_API_KEY" "$AI_COPILOT_API_KEY"
+          check_secret "AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER_API_KEY" "$AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER_API_KEY"
           check_secret "MANYCHAT_API_KEY" "$MANYCHAT_API_KEY"
           check_secret "BOTBUILDERS_API_KEY" "$BOTBUILDERS_API_KEY"
           check_secret "MOLTBOOK_API_KEY" "$MOLTBOOK_API_KEY"
@@ -66,6 +69,7 @@ jobs:
           check_secret "SERVICE_BASE_URL_FABRIC_ENGINES" "$SERVICE_BASE_URL_FABRIC_ENGINES"
           check_secret "SERVICE_BASE_URL_SWARMS_SYSTEMS" "$SERVICE_BASE_URL_SWARMS_SYSTEMS"
           check_secret "SERVICE_BASE_URL_AI_COPILOT" "$SERVICE_BASE_URL_AI_COPILOT"
+          check_secret "SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER" "$SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER"
           check_secret "SERVICE_BASE_URL_OPENCLAW" "$SERVICE_BASE_URL_OPENCLAW"
           
           echo ""
@@ -160,6 +164,25 @@ jobs:
           fi
           echo "  Status: Dry-run mode - no actual API call made"
           echo "✓ AI Copilot check complete"
+
+      - name: AI Jarvis Assistant Engineer Manager Communications Manager Connectivity Check
+        env:
+          AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER_API_KEY: ${{ secrets.AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER_API_KEY }}
+          SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER: ${{ secrets.SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER }}
+        run: |
+          if [ -z "$AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER_API_KEY" ]; then
+            echo "⊘ Skipping AI Jarvis Assistant Engineer Manager Communications Manager check - API key not set"
+            exit 0
+          fi
+          
+          echo "→ Running AI Jarvis Assistant Engineer Manager Communications Manager connectivity check (dry-run)"
+          if [ -n "$SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER" ]; then
+            echo "  Would verify connection to: configured custom endpoint"
+          else
+            echo "  Would verify connection to: https://api.ai-jarvis-assistant-engineer-manager-communications-manager.example.com"
+          fi
+          echo "  Status: Dry-run mode - no actual API call made"
+          echo "✓ AI Jarvis Assistant Engineer Manager Communications Manager check complete"
 
       - name: ManyChat Connectivity Check
         env:
