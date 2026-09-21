@@ -58,7 +58,9 @@
       "baseUrl": "https://api.ai-jarvis-assistant-engineer-manager-communications-manager.example.com",
       "description": "AI Jarvis Assistant Engineer Manager Communications Manager integration",
       "requiredEnvVars": ["AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER_API_KEY"],
-      "optionalEnvVars": ["SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER"],
+      "optionalEnvVars": [
+        "SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER"
+      ],
       "notes": "Set AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_ENGINEER_MANAGER_COMMUNICATIONS_MANAGER"
     },
 
