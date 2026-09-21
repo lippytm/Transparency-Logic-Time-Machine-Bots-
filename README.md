@@ -63,7 +63,7 @@ This project includes a comprehensive AI Stack with support for multiple AI prov
 - **Claude AI Integration**: Full support for Anthropic's Claude models (Opus, Sonnet, Haiku)
 - **LangChain Integration**: Build complex AI applications with LangChain and Claude
 - **Multi-Provider Support**: OpenAI, Cohere, Google AI, and more
-- **AI Clone Services**: Hermes, Fabric Engines, Swarms Systems, and AI Copilot integrations
+- **AI Clone Services**: Hermes, Fabric Engines, Swarms Systems, AI Copilot, and AI Jarvis Assistant Manager integrations
 - **Vector Databases**: Pinecone, Weaviate, and ChromaDB support
 - **Type-Safe Configuration**: Zod validation for all AI settings
 - **Modular Design**: Install only the AI tools you need
@@ -171,6 +171,7 @@ The AI Stack supports multiple AI providers for flexibility and fallback options
 - **Fabric Engines**: AI workflow runtime
 - **Swarms Systems**: Multi-agent coordination
 - **AI Copilot**: Assistant-style AI clone support
+- **AI Jarvis Assistant Manager**: Manager-role AI assistant support
 - **Google AI**: Gemini models (peer dependency for ChromaDB - install separately if needed)
 - **HuggingFace**: Open-source transformers and models
 
@@ -184,6 +185,7 @@ HERMES_API_KEY=your-hermes-api-key
 FABRIC_ENGINES_API_KEY=your-fabric-engines-api-key
 SWARMS_SYSTEMS_API_KEY=your-swarms-systems-api-key
 AI_COPILOT_API_KEY=your-ai-copilot-api-key
+AI_JARVIS_ASSISTANT_MANAGER_API_KEY=your-ai-jarvis-assistant-manager-api-key
 # Note: For Google AI, install @google/generative-ai separately (peer dependency for ChromaDB)
 # GOOGLE_API_KEY=your-google-api-key
 ```
@@ -430,6 +432,7 @@ This project includes a standardized integration framework for cross-platform se
 - **Fabric Engines** - AI workflow runtime
 - **Swarms Systems** - Multi-agent coordination
 - **AI Copilot** - AI assistant integration
+- **AI Jarvis Assistant Manager** - AI manager assistant integration
 - **ManyChat** - Chatbot automation
 - **BotBuilders** - Bot development platform
 - **Moltbook** - Service integration
@@ -454,6 +457,7 @@ This project includes a standardized integration framework for cross-platform se
    export FABRIC_ENGINES_API_KEY=your-key-here
    export SWARMS_SYSTEMS_API_KEY=your-key-here
    export AI_COPILOT_API_KEY=your-key-here
+   export AI_JARVIS_ASSISTANT_MANAGER_API_KEY=your-key-here
    export MANYCHAT_API_KEY=your-key-here
    # ... etc
    ```
@@ -467,6 +471,7 @@ This project includes a standardized integration framework for cross-platform se
 - `FABRIC_ENGINES_API_KEY` - Fabric Engines API key
 - `SWARMS_SYSTEMS_API_KEY` - Swarms Systems API key
 - `AI_COPILOT_API_KEY` - AI Copilot API key
+- `AI_JARVIS_ASSISTANT_MANAGER_API_KEY` - AI Jarvis Assistant Manager API key
 - `MANYCHAT_API_KEY` - ManyChat API key
 - `BOTBUILDERS_API_KEY` - BotBuilders API key
 - `MOLTBOOK_API_KEY` - Moltbook API key
@@ -478,6 +483,7 @@ This project includes a standardized integration framework for cross-platform se
 - `SERVICE_BASE_URL_FABRIC_ENGINES` - Custom Fabric Engines base URL (optional)
 - `SERVICE_BASE_URL_SWARMS_SYSTEMS` - Custom Swarms Systems base URL (optional)
 - `SERVICE_BASE_URL_AI_COPILOT` - Custom AI Copilot base URL (optional)
+- `SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_MANAGER` - Custom AI Jarvis Assistant Manager base URL (optional)
 - `SERVICE_BASE_URL_OPENCLAW` - Custom OpenClaw base URL (optional)
 - `SERVICE_BASE_URL_*` - Custom base URLs for other services (optional)
 
@@ -511,7 +517,7 @@ This project includes a standardized integration framework for cross-platform se
 - Manual trigger via `workflow_dispatch`
 - Automatic trigger on push to `main`
 - Detects presence of service API keys (never prints secret values)
-- Placeholder connectivity checks for: OpenAI, Hermes, Fabric Engines, Swarms Systems, AI Copilot, ManyChat, BotBuilders, Moltbook, Moltbot, OpenClaw, GitHub, Webhooks
+- Placeholder connectivity checks for: OpenAI, Hermes, Fabric Engines, Swarms Systems, AI Copilot, AI Jarvis Assistant Manager, ManyChat, BotBuilders, Moltbook, Moltbot, OpenClaw, GitHub, Webhooks
 - Dry-run oriented (safe for all environments)
 - No external dependencies (pure bash/curl)
 

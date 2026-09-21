@@ -52,6 +52,16 @@
       "notes": "Set AI_COPILOT_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_AI_COPILOT"
     },
 
+    "aiJarvisAssistantManager": {
+      "enabled": false,
+      "apiKey": "${AI_JARVIS_ASSISTANT_MANAGER_API_KEY}",
+      "baseUrl": "https://api.ai-jarvis-assistant-manager.example.com",
+      "description": "AI Jarvis Assistant acting as the Manager",
+      "requiredEnvVars": ["AI_JARVIS_ASSISTANT_MANAGER_API_KEY"],
+      "optionalEnvVars": ["SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_MANAGER"],
+      "notes": "Set AI_JARVIS_ASSISTANT_MANAGER_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_MANAGER"
+    },
+
     "manychat": {
       "enabled": false,
       "apiKey": "${MANYCHAT_API_KEY}",
@@ -155,6 +165,12 @@
         "description": "API key for AI Copilot services",
         "example": "copilot_..."
       },
+      "AI_JARVIS_ASSISTANT_MANAGER_API_KEY": {
+        "type": "string",
+        "required": false,
+        "description": "API key for AI Jarvis Assistant Manager services",
+        "example": "jarvis_..."
+      },
       "MANYCHAT_API_KEY": {
         "type": "string",
         "required": false,
@@ -227,6 +243,12 @@
         "description": "Base URL for AI Copilot API (overrides default)",
         "example": "https://ai-copilot.example.com/api"
       },
+      "SERVICE_BASE_URL_AI_JARVIS_ASSISTANT_MANAGER": {
+        "type": "string",
+        "required": false,
+        "description": "Base URL for AI Jarvis Assistant Manager API (overrides default)",
+        "example": "https://ai-jarvis-assistant-manager.example.com/api"
+      },
       "SERVICE_BASE_URL_BOTBUILDERS": {
         "type": "string",
         "required": false,
@@ -254,7 +276,7 @@
       "1. Copy this file to services.json: cp config/services.example.json config/services.json",
       "2. Set environment variables or GitHub secrets for the services you want to use",
       "3. Update services.json to enable specific services (set 'enabled': true)",
-      "4. Configure AI clone services such as Hermes, Fabric Engines, Swarms Systems, or AI Copilot only with secret-backed environment variables",
+      "4. Configure AI clone services such as Hermes, Fabric Engines, Swarms Systems, AI Copilot, or AI Jarvis Assistant Manager only with secret-backed environment variables",
       "5. NEVER commit services.json with real API keys or secrets",
       "6. Add config/services.json to .gitignore if not already present"
     ],
