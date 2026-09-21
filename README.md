@@ -171,7 +171,7 @@ The AI Stack supports multiple AI providers for flexibility and fallback options
 - **Fabric Engines**: AI workflow runtime
 - **Swarms Systems**: Multi-agent coordination
 - **AI Copilot**: Assistant-style AI clone support
-- **AI Jarvis Assistant Engineer Manager Communications Manager**: Specialized AI clone integration
+- **AI Jarvis Assistant Engineer Manager Communications Manager**: AI assistant engineering and communications integration
 - **Google AI**: Gemini models (peer dependency for ChromaDB - install separately if needed)
 - **HuggingFace**: Open-source transformers and models
 
