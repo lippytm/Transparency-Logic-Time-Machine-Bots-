@@ -161,6 +161,7 @@ jobs:
           echo "  Status: Dry-run mode - no actual API call made"
           echo "✓ AI Copilot check complete"
 
+
       - name: ManyChat Connectivity Check
         env:
           MANYCHAT_API_KEY: ${{ secrets.MANYCHAT_API_KEY }}

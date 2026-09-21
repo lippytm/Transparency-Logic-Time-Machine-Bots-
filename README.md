@@ -52,6 +52,15 @@ npm install @anchordotdev/anchor           # Anchor.dev
 
 **Why optional?** These packages are large and not needed for basic functionality. Install only what your use case requires.
 
+## AI Jarvis management roles
+
+AI Jarvis Assistant, Engineer Manager, and Communications Manager are governed workflow roles defined in `config/jarvis-roles.json`. They are not presumed external API providers and require no role-specific secret or fictional endpoint. Provider credentials belong only to verified services used to execute an approved work item.
+
+- **AI Jarvis Assistant** coordinates work items and evidence.
+- **Engineer Manager** proposes architecture, implementation, testing, and rollback plans.
+- **Communications Manager** prepares audience-scoped handoffs and status reports.
+- Consequential actions—including merges, deployments, publication, spending, legal commitments, identity actions, and physical-system control—require explicit human approval.
+
 ## AI Stack
 
 ### Full AI Toolkit with Claude
