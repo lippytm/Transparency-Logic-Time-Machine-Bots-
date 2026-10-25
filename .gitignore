@@ -19,6 +19,12 @@ yarn-error.log*
 
 # Service configuration with secrets (keep .example.json)
 config/services.json
+config/mempalace.mcp.json
+
+# Private MemPalace memory and imported conversations
+.mempalace/
+mempalace-data/
+memory-imports/
 
 # IDE
 .vscode/
