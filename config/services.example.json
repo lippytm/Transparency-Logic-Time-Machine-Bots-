@@ -102,6 +102,17 @@
       "notes": "Set OPENCLAW_API_KEY in environment or GitHub secrets. Optionally override baseUrl with SERVICE_BASE_URL_OPENCLAW (default: https://api.openclaw.com)"
     },
 
+    "mempalace": {
+      "enabled": false,
+      "transport": "stdio",
+      "command": "mempalace-mcp",
+      "args": [],
+      "description": "Local-first shared memory for Jarvis assistants and agent workflows via MCP",
+      "requiredEnvVars": [],
+      "optionalEnvVars": [],
+      "notes": "Install the official Python MemPalace package separately and merge config/mempalace.mcp.example.json into a compatible MCP client. No API key or hosted REST endpoint is required. This registry entry does not start the server or connect external platforms."
+    },
+
     "github": {
       "enabled": false,
       "apiKey": "${GITHUB_PAT}",

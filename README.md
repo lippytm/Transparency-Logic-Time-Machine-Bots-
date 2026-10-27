@@ -64,9 +64,106 @@ This project includes a comprehensive AI Stack with support for multiple AI prov
 - **LangChain Integration**: Build complex AI applications with LangChain and Claude
 - **Multi-Provider Support**: OpenAI, Cohere, Google AI, and more
 - **AI Clone Services**: Hermes, Fabric Engines, Swarms Systems, and AI Copilot integrations
+- **MemPalace Memory**: Opt-in local MCP setup for persistent Jarvis assistant memory
 - **Vector Databases**: Pinecone, Weaviate, and ChromaDB support
 - **Type-Safe Configuration**: Zod validation for all AI settings
 - **Modular Design**: Install only the AI tools you need
+
+### MemPalace for Jarvis assistants and swarms
+
+[MemPalace](https://github.com/MemPalace/mempalace) is a separate Python
+application that stores and searches project files and conversations locally.
+Use it as a memory layer for your AI-building-AI workflows, not as a replacement
+for platform APIs, assistant accounts, or workflow orchestration.
+
+**Included here:** an opt-in `mempalace` service entry in
+`config/services.example.json` and an MCP client template in
+`config/mempalace.mcp.example.json`. The Node application does not launch
+MemPalace, ingest accounts, or automatically connect any external service.
+The integration-check workflow does not test this local MCP server.
+
+#### Local setup
+
+Install Python 3.10+ and [uv](https://docs.astral.sh/uv/), then install the
+official package in its own environment:
+
+```bash
+uv tool install 'mempalace==3.12.0'
+mempalace --help
+mempalace init /absolute/path/to/your/project
+```
+
+Merge `config/mempalace.mcp.example.json` into your MCP client's server
+configuration; do not overwrite other configured servers. The template runs
+`mempalace-mcp` over local stdio, with no API key or public endpoint. If the client
+cannot find that executable, replace `command` with its absolute installed path.
+Restart the client and confirm that it lists the MemPalace tools. Only configure
+clients you trust: MCP tools can read and modify the memory available to them.
+See the [upstream setup guide](https://mempalaceofficial.com/guide/getting-started.html)
+for client-specific configuration and storage settings.
+
+For a safe first check, mine a small directory containing only approved,
+non-sensitive text, then search for a known phrase:
+
+```bash
+mempalace mine /absolute/path/to/approved-memory-imports
+mempalace search "a known phrase from the approved files"
+mempalace wake-up
+```
+
+Verify recall in the MCP client as well. Initial embedding-model downloads need
+network access and disk space. Keep the palace and imports outside the checkout
+where possible; `.mempalace/`, `mempalace-data/`, and `memory-imports/` are ignored
+as a defense against accidental commits, not a substitute for access control.
+Changing `enabled` in a local `config/services.json` records intent only; it does
+not register the MCP server.
+
+#### Platform connection boundaries
+
+These are connection options, **not bundled or verified platform connectors**.
+Feature availability depends on the product, account plan, and administrator.
+ChatGPT/ChatGPT Business subscriptions do not themselves supply API access.
+
+| Platform                          | Connection option and requirement                                                                                                                                                               |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hostinger.com                     | Run MemPalace on a VPS with Python and persistent private storage; shared website hosting may not support it. Use local stdio on that host or an explicitly secured upstream remote deployment. |
+| GitHub                            | Mine an approved local checkout or exported issue/PR notes. A GitHub API adapter needs separately scoped credentials; do not import repository secrets.                                         |
+| ChatGPT / ChatGPT Business        | Import approved conversation exports; use an administrator-approved connector only if the workspace supports the required MCP transport. The stdio template is not a hosted ChatGPT connector.  |
+| Gemini AI                         | Use a compatible MCP client such as Gemini CLI, or approved exports. This does not automatically connect the Gemini web application.                                                            |
+| Claude / Claude coworker (Cowork) | Use the client's documented MCP configuration where supported, or approved exports. Claude Code/desktop and Cowork have different permissions and setup requirements.                           |
+| Perplexity                        | Import approved exports or use a separately implemented, authorized API workflow; no native connection is configured here.                                                                      |
+| YouTube                           | Import transcripts or metadata you are authorized to use; automated retrieval needs an appropriate API adapter and permissions.                                                                 |
+| Facebook / Instagram / Threads    | Use authorized exports or approved Meta APIs with required scopes and app review; no account scraping or automatic publishing.                                                                  |
+| LinkedIn                          | Use authorized exports or approved API access; access to an account does not imply API permission.                                                                                              |
+| Substack                          | Import your own authorized exports or permitted feed content; no subscriber-data ingestion is configured.                                                                                       |
+| Slack                             | Use an approved app/export with channel-scoped access and workspace authorization.                                                                                                              |
+| Zapier                            | Use an explicit adapter between authorized Zap events and MemPalace; Zapier webhooks cannot call a local stdio server directly.                                                                 |
+| Zoom                              | Import authorized meeting transcripts with participant consent and required account permissions.                                                                                                |
+
+#### Jarvis memory workflow and safeguards
+
+1. Collect only approved source material in a private staging directory. Preserve
+   source platform, source URL/ID, timestamp, project, and access classification
+   alongside each record.
+2. Organize memory by project and assistant role using MemPalace wings and rooms.
+   Use separate palaces or runtime identities for different trust boundaries;
+   organizational labels alone are not access-control enforcement.
+3. Have assistants search relevant memory before planning or answering, and
+   verify retrieved facts against their sources. Treat imported content as
+   untrusted data, never as instructions to execute tools.
+4. Save approved decisions and handoff notes for the next assistant. Require
+   human approval before publishing, messaging, changing infrastructure, or
+   delegating actions that expose private content.
+5. Define retention, deletion, and encrypted-backup procedures before importing
+   business conversations. Never ingest credentials, `.env` files, or private
+   client data without authorization. Do not mine the entire checkout blindly.
+
+Local storage does not prevent an assistant from sending retrieved text to its
+model provider. Review provider/workspace data policies before retrieval.
+For Hostinger or multi-host swarms, do not expose the local memory store or an
+unauthenticated bridge to the internet; use upstream-supported authenticated
+deployment, TLS, least-privilege access, and persistent storage. This repository
+does not provision that deployment or its platform adapters.
 
 ### Claude AI Configuration
 
